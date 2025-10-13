@@ -19,6 +19,7 @@ class m251006_195258_create_documentos_table extends Migration
             'id' => $this->primaryKey(),
             'carta_conducao' => $this->string(255),
             'cartao_cidadao' => $this->string(255),
+            'valido' => $this->boolean()->notNull(),
             'perfil_id' => $this->integer(),
         ], 'ENGINE=InnoDB');
 
