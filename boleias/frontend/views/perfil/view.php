@@ -7,7 +7,7 @@ use yii\widgets\DetailView;
 /** @var common\models\Perfil $model */
 
 $this->title = $model->id;
-$this->params['breadcrumbs'][] = ['label' => 'Perfils', 'url' => ['index']];
+$this->params['breadcrumbs'][] = ['label' => 'Perfil', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
 ?>

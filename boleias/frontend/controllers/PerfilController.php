@@ -4,6 +4,7 @@ namespace frontend\controllers;
 
 use common\models\Perfil;
 use common\models\PerfilSearch;
+use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -65,9 +66,14 @@ class PerfilController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
-    public function actionCreate()
+    public function actionCreate($user_id)
     {
+        if (!Yii::$app->user->isGuest) {
+            return $this->goHome();
+        }
+
         $model = new Perfil();
+        $model->user_id = $user_id;
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
