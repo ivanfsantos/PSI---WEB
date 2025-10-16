@@ -1,81 +1,76 @@
 <?php
-
 /** @var \yii\web\View $this */
 /** @var string $content */
 
-use backend\assets\AppAsset;
-use common\widgets\Alert;
-use yii\bootstrap5\Breadcrumbs;
-use yii\bootstrap5\Html;
-use yii\bootstrap5\Nav;
-use yii\bootstrap5\NavBar;
+use yii\helpers\Html;
+use yii\helpers\Url;
 
-AppAsset::register($this);
+$this->beginPage();
 ?>
-<?php $this->beginPage() ?>
 <!DOCTYPE html>
-<html lang="<?= Yii::$app->language ?>" class="h-100">
+<html lang="<?= Yii::$app->language ?>">
 <head>
     <meta charset="<?= Yii::$app->charset ?>">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <base href="<?= Url::to('@web') ?>/">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <?php $this->registerCsrfMetaTags() ?>
-    <title><?= Html::encode($this->title) ?></title>
+    <title><?= Html::encode($this->title ?: 'Boleias') ?></title>
+
+    <!-- Favicon -->
+    <link href="htmlcodex/img/favicon.ico" rel="icon">
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="htmlcodex/css/bootstrap.min.css">
+    <link rel="stylesheet" href="htmlcodex/css/style.css">
+
     <?php $this->head() ?>
 </head>
-<body class="d-flex flex-column h-100">
+<body>
 <?php $this->beginBody() ?>
 
-<header>
-    <?php
-    NavBar::begin([
-        'brandLabel' => Yii::$app->name,
-        'brandUrl' => Yii::$app->homeUrl,
-        'options' => [
-            'class' => 'navbar navbar-expand-md navbar-dark bg-dark fixed-top',
-        ],
-    ]);
-    $menuItems = [
-        ['label' => 'Home', 'url' => ['/site/index']],
-    ];
-    if (Yii::$app->user->isGuest) {
-        $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
-    }     
-    echo Nav::widget([
-        'options' => ['class' => 'navbar-nav me-auto mb-2 mb-md-0'],
-        'items' => $menuItems,
-    ]);
-    if (Yii::$app->user->isGuest) {
-        echo Html::tag('div',Html::a('Login',['/site/login'],['class' => ['btn btn-link login text-decoration-none']]),['class' => ['d-flex']]);
-    } else {
-        echo Html::beginForm(['/site/logout'], 'post', ['class' => 'd-flex'])
-            . Html::submitButton(
-                'Logout (' . Yii::$app->user->identity->username . ')',
-                ['class' => 'btn btn-link logout text-decoration-none']
-            )
-            . Html::endForm();
-    }
-    NavBar::end();
-    ?>
-</header>
+<!-- BACKEND NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow sticky-top">
+    <a class="navbar-brand px-4" href="<?= Url::to(['/site/index']) ?>">Boleias</a>
+    <button class="navbar-toggler me-4" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+        <div class="navbar-nav ms-auto p-2 p-lg-0">
+            <a href="<?= Url::to(['/site/index']) ?>" class="nav-item nav-link">Dashboard</a>
 
-<main role="main" class="flex-shrink-0">
-    <div class="container">
-        <?= Breadcrumbs::widget([
-            'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
-        ]) ?>
-        <?= Alert::widget() ?>
-        <?= $content ?>
+            <?php if (Yii::$app->user->isGuest): ?>
+                <a href="<?= Url::to(['/site/login']) ?>" class="nav-item nav-link">Login</a>
+            <?php else: ?>
+                <?= Html::beginForm(['/site/logout'], 'post', ['class' => 'd-inline']) ?>
+                <button class="btn nav-link" style="border:none;background:none;">
+                    Logout (<?= Yii::$app->user->identity->username ?>)
+                </button>
+                <?= Html::endForm() ?>
+            <?php endif; ?>
+        </div>
     </div>
+</nav>
+<!-- END NAVBAR -->
+
+<!-- MAIN CONTENT -->
+<main class="container py-4">
+    <?= $content ?>
 </main>
+<!-- END MAIN CONTENT -->
 
-<footer class="footer mt-auto py-3 text-muted">
-    <div class="container">
-        <p class="float-start">&copy; <?= Html::encode(Yii::$app->name) ?> <?= date('Y') ?></p>
-        <p class="float-end"><?= Yii::powered() ?></p>
-    </div>
+<!-- FOOTER -->
+<footer class="bg-dark text-light text-center py-3 mt-5">
+    <p class="mb-0">&copy; <?= date('Y') ?> Boleias Admin</p>
 </footer>
+
+<!-- JS Files -->
+<script src="htmlcodex/js/main.js"></script>
+<script src="htmlcodex/lib/wow/wow.min.js"></script>
+<script src="htmlcodex/lib/easing/easing.min.js"></script>
+<script src="htmlcodex/lib/waypoints/waypoints.min.js"></script>
+<script src="htmlcodex/lib/owlcarousel/owl.carousel.min.js"></script>
 
 <?php $this->endBody() ?>
 </body>
 </html>
-<?php $this->endPage();
+<?php $this->endPage(); ?>
