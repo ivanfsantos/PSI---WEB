@@ -17,26 +17,31 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
+    <?php
+
+      $perfilExistente = Perfil::findOne(['user_id' => Yii::$app->user->id]);
+      if(!$perfilExistente) { ?>
+
     <p>
         <?= Html::a('Create Perfil', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
+          <?php
+      }
+      ?>
+
+
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
-            'id',
             'nome',
             'telefone',
             'morada',
             'genero',
-            //'data_nascimento',
-            //'condutor',
-            //'user_id',
+            'data_nascimento',
+            'condutor',
             [
                 'class' => ActionColumn::className(),
                 'urlCreator' => function ($action, Perfil $model, $key, $index, $column) {

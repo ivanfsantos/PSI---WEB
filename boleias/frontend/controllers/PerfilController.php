@@ -37,10 +37,12 @@ class PerfilController extends Controller
      *
      * @return string
      */
-    public function actionIndex()
+    public function actionIndex($id)
     {
+
         $searchModel = new PerfilSearch();
-        $dataProvider = $searchModel->search($this->request->queryParams);
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider->query->andWhere(['user_id' => $id]);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -66,26 +68,37 @@ class PerfilController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
-    public function actionCreate($user_id)
+    public function actionCreate()
     {
-        if (!Yii::$app->user->isGuest) {
+        // se não estiver autenticado
+        if (Yii::$app->user->isGuest) {
             return $this->goHome();
         }
 
-        $model = new Perfil();
-        $model->user_id = $user_id;
+        $perfilExistente = Perfil::findOne(['user_id' => Yii::$app->user->id]);
 
-        if ($this->request->isPost) {
+        if ($perfilExistente) {
+            return $this->redirect(['index','id'=>$perfilExistente->user_id]);
+        }
+        else {
+
+            $model = new Perfil();
+            $model->user_id = Yii::$app->user->id;
+
             if ($model->load($this->request->post()) && $model->save()) {
                 return $this->redirect(['view', 'id' => $model->id]);
             }
-        } else {
-            $model->loadDefaultValues();
-        }
 
-        return $this->render('create', [
-            'model' => $model,
-        ]);
+            else {
+                $model->loadDefaultValues();
+            }
+
+
+            return $this->render('create', [
+                'model' => $model,
+            ]);
+
+        }
     }
 
     /**
@@ -119,7 +132,7 @@ class PerfilController extends Controller
     {
         $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
+        return $this->redirect(['index','id'=> $id]);
     }
 
     /**
