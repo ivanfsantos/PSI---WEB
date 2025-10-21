@@ -37,20 +37,23 @@ $this->beginPage();
     <button class="navbar-toggler me-4" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
         <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse" id="navbarCollapse">
-        <div class="navbar-nav ms-auto p-4 p-lg-0">
-            <a href="<?= Url::to(['/site/index']) ?>" class="nav-item nav-link">Home</a>
-            <a href="<?= Url::to(['/site/contact']) ?>" class="nav-item nav-link">Contact</a>
-            <a href="<?= Url::to(['/perfil/index']) ?>" class="nav-item nav-link">Perfil</a>
+
 
             <?php if (Yii::$app->user->isGuest): ?>
                 <a href="<?= Url::to(['/site/login']) ?>" class="nav-item nav-link">Login</a>
                 <a href="<?= Url::to(['/site/signup']) ?>" class="nav-item nav-link">Signup</a>
             <?php else: ?>
                 <?= Html::beginForm(['/site/logout'], 'post', ['class' => 'd-inline']) ?>
+
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+
+        <div class="navbar-nav ms-auto p-4 p-lg-0">
+            <a href="<?= Url::to(['/perfil/index','id' => Yii::$app->user->id]) ?>" class="nav-item nav-link">Perfil</a>
+        </div>
                 <button class="btn nav-link" style="border:none;background:none;">
                     Logout (<?= Yii::$app->user->identity->username ?>)
                 </button>
+
                 <?= Html::endForm() ?>
             <?php endif; ?>
         </div>

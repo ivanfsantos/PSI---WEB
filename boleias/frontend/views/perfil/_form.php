@@ -18,13 +18,11 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'morada')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'genero')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($model, 'genero')->radioList(['Masculino' => 'Masculino','Feminino' => 'Feminino']) ?>
 
     <?= $form->field($model, 'data_nascimento')->textInput() ?>
 
-    <?= $form->field($model, 'condutor')->textInput() ?>
-
-    <?= $form->field($model, 'user_id')->textInput() ?>
+    <?= $form->field($model, 'condutor')->checkbox() ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
