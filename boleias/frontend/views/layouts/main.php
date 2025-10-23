@@ -49,6 +49,7 @@ $this->beginPage();
 
         <div class="navbar-nav ms-auto p-4 p-lg-0">
             <a href="<?= Url::to(['/perfil/index','id' => Yii::$app->user->id]) ?>" class="nav-item nav-link">Perfil</a>
+
         </div>
                 <button class="btn nav-link" style="border:none;background:none;">
                     Logout (<?= Yii::$app->user->identity->username ?>)
