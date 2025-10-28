@@ -55,6 +55,20 @@ class RbacController extends Controller
         $eliminarAdmin->description = 'Eliminar um perfil de Administrador';
         $auth->add($eliminarAdmin);
 
+        //Boleia
+        $criarBoleia = $auth->createPermission('criarBoleia');
+        $criarBoleia->description = 'Criar uma Boleia';
+        $auth->add($criarBoleia);
+
+        $editarBoleia = $auth->createPermission('editarBoleia');
+        $editarBoleia->description = 'Editar uma Boleia';
+        $auth->add($editarBoleia);
+
+        $eliminarBoleia = $auth->createPermission('eliminarBoleia');
+        $eliminarBoleia->description = 'Eliminar uma Boleia';
+        $auth->add($eliminarBoleia);
+
+
         //Documentos
         $criarDocumento = $auth->createPermission('criarDocumento');
         $criarDocumento->description = 'Criar um Documento';
@@ -112,16 +126,131 @@ class RbacController extends Controller
         $removerFavorito->description = 'Remover um destino favorito';
         $auth->add($removerFavorito);
 
+        //Estatística
+        $criarEstatistica = $auth->createPermission('criarEstatistica');
+        $criarEstatistica->description = 'Criar uma estatistica';
+        $auth->add($criarEstatistica);
 
+        $updateEstatistica = $auth->createPermission('updateEstatistica');
+        $updateEstatistica->description = 'Dar update a uma estatistica';
+        $auth->add($updateEstatistica);
 
+        $elimnarEstatistica = $auth->createPermission('elimnarEstatistica');
+        $elimnarEstatistica->description = 'Eliminar uma estatistica';
+        $auth->add($elimnarEstatistica);
+
+        //Acessos
+        $acederBackend = $auth->createPermission('acederBackend');
+        $acederBackend->description = 'Aceder ao backend';
+        $auth->add($acederBackend);
+
+        $acederFrontend = $auth->createPermission('acederFrontend');
+        $acederFrontend->description = 'Aceder ao frontend';
+        $auth->add($acederFrontend);
+
+        $acederEstatistica = $auth->createPermission('acederEstatistica');
+        $acederEstatistica->description = 'Aceder ás estatisticas';
+        $auth->add($acederEstatistica);
+
+        $acederDocumento = $auth->createPermission('acederDocumento');
+        $acederDocumento->description = 'Aceder aos documentos';
+        $auth->add($acederDocumento);
+
+        $acederPerfil = $auth->createPermission('acederPerfil');
+        $acederPerfil->description = 'Aceder aos perfis';
+        $auth->add($acederPerfil);
+
+        $acederAvaliacao = $auth->createPermission('acederAvaliacao');
+        $acederAvaliacao->description = 'Aceder ás avaliacoes';
+        $auth->add($acederAvaliacao);
+
+        $acederReserva = $auth->createPermission('acederReserva');
+        $acederReserva->description = 'Aceder ás reservas';
+        $auth->add($acederReserva);
+
+        $acederFavorito = $auth->createPermission('acederFavorito');
+        $acederFavorito->description = 'Aceder aos destinos favoritos';
+        $auth->add($acederFavorito);
+
+        $acederBoleia = $auth->createPermission('acederBoleia');
+        $acederBoleia->description = 'Aceder ás boleias';
+        $auth->add($acederBoleia);
+
+        $acederViatura = $auth->createPermission('acederViatura');
+        $acederViatura->description = 'Aceder ás viaturas';
+        $auth->add($acederViatura);
+
+        //Login
+        $fazerLogin = $auth->createPermission('fazerLogin');
+        $fazerLogin->description = 'Fazer login';
+        $auth->add($fazerLogin);
+
+        $fazerLogout = $auth->createPermission('fazerLogout');
+        $fazerLogout->description = 'Fazer logout';
+        $auth->add($fazerLogout);
+
+        //Admin
+        $criarAdmin = $auth->createPermission('criarAdmin');
+        $criarAdmin->description = 'Criar um Admin';
+        $auth->add($criarAdmin);
+
+        $editarAdmin = $auth->createPermission('editarAdmin');
+        $editarAdmin->description = 'Editar um Admin';
+        $auth->add($editarAdmin);
+
+        $eliminarAdmin = $auth->createPermission('eliminarAdmin');
+        $eliminarAdmin->description = 'Eliminar um Admin';
+        $auth->add($eliminarAdmin);
+
+        // ====== Definir Papéis =====
 
         // adciona a role "passageiro"
         $passageiro = $auth->createRole('passageiro');
         $auth->add($passageiro);
 
+        $auth->addChild($passageiro, $fazerLogin);
+        $auth->addChild($passageiro, $fazerLogout);
+        $auth->addChild($passageiro, $acederFrontend);
+        $auth->addChild($passageiro, $acederAvaliacao);
+        $auth->addChild($passageiro, $acederReserva);
+        $auth->addChild($passageiro, $acederFavorito);
+        $auth->addChild($passageiro, $acederPerfil);
+        $auth->addChild($passageiro, $criarAvaliacao);
+        $auth->addChild($passageiro, $editarAvaliacao);
+        $auth->addChild($passageiro, $eliminarAvaliacao);
+        $auth->addChild($passageiro, $criarReserva);
+        $auth->addChild($passageiro, $cancelarReserva);
+        $auth->addChild($passageiro, $adicionarFavorito);
+        $auth->addChild($passageiro, $removerFavorito);
+        $auth->addChild($passageiro, $criarPassageiro);
+        $auth->addChild($passageiro, $editarPassageiro);
+        $auth->addChild($passageiro, $eliminarPassageiro);
+
+
         // adciona a role "motorista"
         $motorista = $auth->createRole('motorista');
         $auth->add($motorista);
+
+        //Herda permissões de Passageiro
+        $auth->addChild($motorista, $passageiro);
+
+        // Permissões exclusivas de Motorista
+        $auth->addChild($motorista, $criarCondutor);
+        $auth->addChild($motorista, $editarCondutor);
+        $auth->addChild($motorista, $eliminarCondutor);
+        $auth->addChild($motorista, $acederDocumento);
+        $auth->addChild($motorista, $acederBoleia);
+        $auth->addChild($motorista, $acederViatura);
+        $auth->addChild($motorista, $criarDocumento);
+        $auth->addChild($motorista, $editarDocumento);
+        $auth->addChild($motorista, $eliminarDocumento);
+        $auth->addChild($motorista, $criarBoleia);
+        $auth->addChild($motorista, $editarBoleia);
+        $auth->addChild($motorista, $eliminarBoleia);
+        $auth->addChild($motorista, $criarViatura);
+        $auth->addChild($motorista, $editarViatura);
+        $auth->addChild($motorista, $eliminarViatura);
+
 
         // adciona a role "admin" e adicionar childs para ter as mesmas permissoes que as childs
         $admin = $auth->createRole('admin');
@@ -129,7 +258,20 @@ class RbacController extends Controller
         $auth->addChild($admin , $passageiro);
         $auth->addChild($admin , $motorista);
 
+        //Permissões exclusivas para Admin
+        $auth->addChild($admin , $criarAdmin);
+        $auth->addChild($admin , $editarAdmin);
+        $auth->addChild($admin , $eliminarAdmin);
+        $auth->addChild($admin , $acederBoleia);
+        $auth->addChild($admin , $acederEstatistica);
 
+        // ==== Atribuir Papéis a Utilizadores ====
 
+        // Substituir pelos IDs reais dos utilizadores no banco de dados
+        $auth->assign($admin, 1);   // Admin (ID 1)
+        $auth->assign($passageiro, 2); // Passageiro (ID 2)
+        $auth->assign($motorista, 3); // Motorista (ID 3)
+
+        echo "RBAC configurado com sucesso.\n";
     }
 }
