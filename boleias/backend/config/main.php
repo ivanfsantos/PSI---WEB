@@ -11,7 +11,11 @@ return [
     'basePath' => dirname(__DIR__),
     'controllerNamespace' => 'backend\controllers',
     'bootstrap' => ['log'],
-    'modules' => [],
+    'modules' => [
+        'api' => [
+            'class' => 'backend\modules\api\ModuleAPI',
+        ],
+    ],
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-backend',
@@ -37,11 +41,38 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
+        'urlManager' => [
+            'enablePrettyUrl' => true,
+            'showScriptName' => false,
+            'rules' => [
+                [
+                    'class' => 'yii\rest\UrlRule',
+                    'controller' => [
+                        'api/user',
+                        'api/viatura',
+                        'api/reserva',
+                        'api/perfil',
+                        'api/documento',
+                        'api/destinofavorito',
+                        'api/boleia',
+                        'api/avaliacao',
+                    ],
+                ],
+            ],
+        ],
         /*
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                ['class' => 'yii\rest\UrlRule','controller' => 'api/user'],
+                ['class' => 'yii\rest\UrlRule','controller' => 'api/viatura'],
+                ['class' => 'yii\rest\UrlRule','controller' => 'api/reserva'],
+                ['class' => 'yii\rest\UrlRule','controller' => 'api/perfil'],
+                ['class' => 'yii\rest\UrlRule','controller' => 'api/documento'],
+                ['class' => 'yii\rest\UrlRule','controller' => 'api/destinofavorito'],
+                ['class' => 'yii\rest\UrlRule','controller' => 'api/boleia'],
+                ['class' => 'yii\rest\UrlRule','controller' => 'api/avaliacao'],
             ],
         ],
         */
