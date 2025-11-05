@@ -20,7 +20,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'genero')->radioList(['Masculino' => 'Masculino','Feminino' => 'Feminino']) ?>
 
-    <?= $form->field($model, 'data_nascimento')->textInput() ?>
+    <?= $form->field($model, 'data_nascimento')->input('date') ?>
 
     <?= $form->field($model, 'condutor')->checkbox() ?>
 
