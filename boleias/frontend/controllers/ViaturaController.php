@@ -2,17 +2,17 @@
 
 namespace frontend\controllers;
 
-use common\models\Perfil;
-use common\models\PerfilSearch;
-use Yii;
+use app\models\User;
+use common\models\Viatura;
+use common\models\ViaturaSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * PerfilController implements the CRUD actions for Perfil model.
+ * ViaturaController implements the CRUD actions for Viatura model.
  */
-class PerfilController extends Controller
+class ViaturaController extends Controller
 {
     /**
      * @inheritDoc
@@ -33,29 +33,27 @@ class PerfilController extends Controller
     }
 
     /**
-     * Lists all Perfil models.
+     * Lists all Viatura models.
      *
      * @return string
      */
     public function actionIndex($id)
     {
 
-        $perfilExistente = Perfil::findOne(['user_id' => Yii::$app->user->id]);
+        $searchModel = new ViaturaSearch();
+        $dataProvider = $searchModel->search($this->request->queryParams);
+        $dataProvider->query->andWhere(['perfil_id' => $id]);
 
-        $searchModel = new PerfilSearch();
-
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        $dataProvider->query->andWhere(['user_id' => $id]);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-            'perfilExistente'=>$perfilExistente,
+            'id' => $id
         ]);
     }
 
     /**
-     * Displays a single Perfil model.
+     * Displays a single Viatura model.
      * @param int $id ID
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
@@ -68,45 +66,31 @@ class PerfilController extends Controller
     }
 
     /**
-     * Creates a new Perfil model.
+     * Creates a new Viatura model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
-    public function actionCreate()
+    public function actionCreate($id)
     {
-        // se não estiver autenticado
-        if (Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
 
-        $perfil = Perfil::findOne(['user_id' => Yii::$app->user->id]);
+        $model = new Viatura();
+        $model->perfil_id = $id;
 
-        if ($perfil) {
-            return $this->redirect(['index','id'=>$perfil->user_id]);
-        }
-        else {
-
-            $model = new Perfil();
-            $model->user_id = Yii::$app->user->id;
-
+        if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
                 return $this->redirect(['view', 'id' => $model->id]);
             }
-
-            else {
-                $model->loadDefaultValues();
-            }
-
-
-            return $this->render('create', [
-                'model' => $model,
-            ]);
-
+        } else {
+            $model->loadDefaultValues();
         }
+
+        return $this->render('create', [
+            'model' => $model,
+        ]);
     }
 
     /**
-     * Updates an existing Perfil model.
+     * Updates an existing Viatura model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param int $id ID
      * @return string|\yii\web\Response
@@ -126,7 +110,7 @@ class PerfilController extends Controller
     }
 
     /**
-     * Deletes an existing Perfil model.
+     * Deletes an existing Viatura model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param int $id ID
      * @return \yii\web\Response
@@ -136,19 +120,19 @@ class PerfilController extends Controller
     {
         $this->findModel($id)->delete();
 
-        return $this->redirect(['index','id'=> $id]);
+        return $this->redirect(['index']);
     }
 
     /**
-     * Finds the Perfil model based on its primary key value.
+     * Finds the Viatura model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param int $id ID
-     * @return Perfil the loaded model
+     * @return Viatura the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Perfil::findOne(['id' => $id])) !== null) {
+        if (($model = Viatura::findOne(['id' => $id])) !== null) {
             return $model;
         }
 
