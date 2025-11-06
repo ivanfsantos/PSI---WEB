@@ -40,13 +40,17 @@ class PerfilController extends Controller
     public function actionIndex($id)
     {
 
+        $perfilExistente = Perfil::findOne(['user_id' => Yii::$app->user->id]);
+
         $searchModel = new PerfilSearch();
+
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $dataProvider->query->andWhere(['user_id' => $id]);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'perfilExistente'=>$perfilExistente,
         ]);
     }
 

@@ -8,6 +8,7 @@ use yii\grid\GridView;
 
 /** @var yii\web\View $this */
 /** @var common\models\PerfilSearch $searchModel */
+/** @var common\models\Perfil $perfilExistente */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
 $this->title = 'Perfil';
@@ -17,10 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <?php
-
-      $perfilExistente = Perfil::findOne(['user_id' => Yii::$app->user->id]);
-      if(!$perfilExistente): ?>
+    <?php if(!$perfilExistente): ?>
         <p>
             <?= Html::a('Create Perfil', ['create'], ['class' => 'btn btn-success']) ?>
         </p>
@@ -28,7 +26,7 @@ $this->params['breadcrumbs'][] = $this->title;
          <div class="container">
              <div class="row">
                  <div class="col-auto">
-                     <?= Html::a('Ver Viaturas', ['viatura/index', 'id' => $perfil->id], ['class' => 'btn btn-success']) ?>
+                     <?= Html::a('Ver Viaturas', ['viatura/index'], ['class' => 'btn btn-success']) ?>
                  </div>
                  <div class="col-auto">
                      <?= Html::a('Enviar Documentos', ['documento/create'], ['class' => 'btn btn-success']) ?>
