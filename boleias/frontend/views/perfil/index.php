@@ -20,14 +20,22 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php
 
       $perfilExistente = Perfil::findOne(['user_id' => Yii::$app->user->id]);
-      if(!$perfilExistente) { ?>
-
-    <p>
-        <?= Html::a('Create Perfil', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
-          <?php
-      }
-      ?>
+      if(!$perfilExistente): ?>
+        <p>
+            <?= Html::a('Create Perfil', ['create'], ['class' => 'btn btn-success']) ?>
+        </p>
+      <?php else: ?>
+         <div class="container">
+             <div class="row">
+                 <div class="col-auto">
+                     <?= Html::a('Ver Viaturas', ['viatura/index', 'id' => $perfil->id], ['class' => 'btn btn-success']) ?>
+                 </div>
+                 <div class="col-auto">
+                     <?= Html::a('Enviar Documentos', ['documento/create'], ['class' => 'btn btn-success']) ?>
+                 </div>
+             </div>
+         </div>
+    <?php endif; ?>
 
 
 
