@@ -36,7 +36,7 @@ class Avaliacao extends \yii\db\ActiveRecord
         return [
             [['descricao', 'rating', 'boleia_id', 'perfil_id'], 'required'],
             [['descricao'], 'string'],
-            [['rating', 'boleia_id', 'perfil_id'], 'integer'],
+            [['rating', 'boleia_id', 'perfil_id'], 'integer', 'min' => 0, 'max' => 5],
             [['boleia_id'], 'exist', 'skipOnError' => true, 'targetClass' => Boleia::class, 'targetAttribute' => ['boleia_id' => 'id']],
             [['perfil_id'], 'exist', 'skipOnError' => true, 'targetClass' => Perfil::class, 'targetAttribute' => ['perfil_id' => 'id']],
         ];
@@ -74,6 +74,11 @@ class Avaliacao extends \yii\db\ActiveRecord
     public function getPerfil()
     {
         return $this->hasOne(Perfil::class, ['id' => 'perfil_id']);
+    }
+
+    public function getRatingFormatado()
+    {
+        return $this->rating . "/5";
     }
 
 }

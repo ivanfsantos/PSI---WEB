@@ -12,7 +12,10 @@ return [
     'bootstrap' => ['log'],
     'controllerNamespace' => 'frontend\controllers',
     'components' => [
-        'request' => [
+        'formatter' => [
+            'class' => 'common\components\Formatter',
+        ],
+    'request' => [
             'csrfParam' => '_csrf-frontend',
         ],
         'user' => [

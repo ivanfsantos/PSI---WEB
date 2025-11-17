@@ -34,22 +34,52 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'columns' => [
-            'nome',
-            'telefone',
-            'morada',
-            'genero',
-            'data_nascimento',
-            'condutor',
-            [
-                'class' => ActionColumn::className(),
-                'urlCreator' => function ($action, Perfil $model, $key, $index, $column) {
-                    return Url::toRoute([$action, 'id' => $model->id]);
-                 }
+            'dataProvider' => $dataProvider,
+            'columns' => [
+                    'nome',
+                    'telefone',
+                    'morada',
+                    'genero',
+                    'data_nascimento',
+                    'condutor',
+                    [
+                            'class' => ActionColumn::className(),
+                            'template' => '{view} {update} {delete} {avaliar}',
+                            'buttons' => [
+                                    'view' => fn($url,$model) =>
+                                    Html::a('Ver', $url, [
+                                            'class' => 'btn btn-primary btn-sm',
+                                            'style' => 'margin-right: 5px;'
+                                    ]),
+
+                                    'update' => fn($url,$model) =>
+                                    Html::a('Editar', $url, [
+                                            'class' => 'btn btn-warning btn-sm',
+                                            'style' => 'margin-right: 5px;'
+                                    ]),
+
+                                    'delete' => fn($url,$model) =>
+                                    Html::a('Eliminar', $url, [
+                                            'class' => 'btn btn-danger btn-sm',
+                                            'style' => 'margin-right: 5px;',
+                                            'data-confirm' => 'Tem certeza?',
+                                            'data-method' => 'post'
+                                    ]),
+
+                                    'avaliar' => fn($url,$model) =>
+                                    Html::a('Avaliar', ['avaliacao/create','perfil_id' => $model->id], [
+                                            'class' => 'btn btn-secondary btn-sm',
+                                            'style' => 'margin-right: 5px;'
+                                    ]),
+                            ],
+
+                            'urlCreator' => function ($action, Perfil $model, $key, $index, $column) {
+                                return Url::toRoute([$action, 'id' => $model->id]);
+                            }
+                    ],
             ],
-        ],
     ]); ?>
+
 
 
 </div>

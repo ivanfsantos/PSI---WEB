@@ -17,10 +17,13 @@ return [
         ],
     ],
     'components' => [
+        'formatter' => [
+            'class' => 'common\components\Formatter',
+        ],
         'request' => [
             'csrfParam' => '_csrf-backend',
         ],
-        'user' => [
+    'user' => [
             'identityClass' => 'common\models\User',
             'enableAutoLogin' => true,
             'identityCookie' => ['name' => '_identity-backend', 'httpOnly' => true],
