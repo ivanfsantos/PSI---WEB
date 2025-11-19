@@ -1,24 +1,24 @@
 <?php
 
-use common\models\Documento;
+use common\models\User;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
 
 /** @var yii\web\View $this */
-/** @var frontend\models\DocumentoSearch $searchModel */
+/** @var common\models\UserSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Documentos';
+$this->title = 'Users';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="documento-index">
+<div class="user-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Create Documento', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Create User', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
@@ -27,16 +27,16 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
+            'username',
 
-            'id',
-            'carta_conducao',
-            'cartao_cidadao',
-            'valido',
-            'perfil_id',
+            //'email:email',
+            //'status',
+            //'created_at',
+            //'updated_at',
+            //'verification_token',
             [
                 'class' => ActionColumn::className(),
-                'urlCreator' => function ($action, Documento $model, $key, $index, $column) {
+                'urlCreator' => function ($action, User $model, $key, $index, $column) {
                     return Url::toRoute([$action, 'id' => $model->id]);
                  }
             ],

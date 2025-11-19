@@ -4,6 +4,9 @@ namespace frontend\controllers;
 
 use common\models\Boleia;
 use common\models\BoleiaSearch;
+use common\models\Perfil;
+use common\models\Reserva;
+use common\models\Viatura;
 use frontend\models\ResendVerificationEmailForm;
 use frontend\models\VerifyEmailForm;
 use Yii;
@@ -31,8 +34,9 @@ class SiteController extends Controller
     {
         return [
             'access' => [
+
                 'class' => AccessControl::class,
-                'only' => ['logout', 'signup'],
+                'only' => ['logout', 'signup','index','create'],
                 'rules' => [
                     [
                         'actions' => ['signup'],
@@ -43,6 +47,16 @@ class SiteController extends Controller
                         'actions' => ['logout'],
                         'allow' => true,
                         'roles' => ['@'],
+                    ],
+                    [
+                        'actions' => ['index'],
+                        'allow' => true,
+                        'roles' => ['acederBoleia'],
+                    ],
+                    [
+                        'actions' => ['create'],
+                        'allow' => true,
+                        'roles' => ['criarBoleia'],
                     ],
                 ],
             ],
@@ -78,13 +92,18 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new BoleiaSearch();
-        $dataProvider = $searchModel->search($this->request->queryParams);
+        if(!Yii::$app->user->isGuest){
 
-        return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
-        ]);
+            $searchModel = new BoleiaSearch();
+            $dataProvider = $searchModel->search($this->request->queryParams);
+
+            return $this->render('index', [
+                'searchModel' => $searchModel,
+                'dataProvider' => $dataProvider,
+
+            ]);
+        }else
+            return $this->redirect(['site/login']);
     }
 
 
@@ -98,6 +117,13 @@ class SiteController extends Controller
     public function actionCreate()
     {
         $model = new Boleia();
+        $perfil = Perfil::findOne(['user_id' => Yii::$app->user->id]);
+
+        $perfilId = $perfil->id;
+
+        $viaturasUser = Viatura::find()->where(['perfil_id' => $perfil->id])->all();
+
+
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
@@ -109,6 +135,7 @@ class SiteController extends Controller
 
         return $this->render('create', [
             'model' => $model,
+            'viaturas' => $viaturasUser,
         ]);
     }
 
@@ -117,21 +144,46 @@ class SiteController extends Controller
     {
         $model = $this->findModel($id);
 
+        $perfil = Perfil::findOne(['user_id' => Yii::$app->user->id]);
+
+        $viaturasUser = Viatura::find()->where(['perfil_id' => $perfil->id])->all();
+
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('update', [
             'model' => $model,
+            'viaturas' => $viaturasUser
         ]);
     }
 
 
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $boleia = $this->findModel($id);
+        $userIdLogado = Yii::$app->user->id;
+
+        $viatura = $boleia->viatura;
+
+        $reservasBoleia = Reserva::find()->where(['boleia_id' => $boleia->id])->all();
+
+        if ($boleia->viatura->perfil->user_id != $userIdLogado) {
+            throw new \yii\web\ForbiddenHttpException('não pode apagar.');
+        }
+
+        $boleia->delete();
+
+        foreach ($reservasBoleia as $reserva) {
+
+            $reserva->delete();
+            $viatura->lugares_disponiveis++;
+            $viatura->save();
+
+        }
 
         return $this->redirect(['index']);
+
     }
 
 
