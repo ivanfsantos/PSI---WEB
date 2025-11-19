@@ -29,8 +29,14 @@ $this->params['breadcrumbs'][] = $this->title;
           <?php
       } else { ?>
           <p>
+              <?php
 
-              <?= Html::a('Ver Viaturas', ['viatura/index', 'id' => $perfil->id], ['class' => 'btn btn-success']) ?>
+                if(Yii::$app->user->can('acederViatura')){
+                   echo Html::a('Ver Viaturas', ['viatura/index', 'id' => $perfil->id], ['class' => 'btn btn-success']);
+                }
+                ?>
+
+
 
           </p>
     <?php
@@ -56,7 +62,17 @@ $this->params['breadcrumbs'][] = $this->title;
                 'class' => ActionColumn::className(),
                 'urlCreator' => function ($action, Perfil $model, $key, $index, $column) {
                     return Url::toRoute([$action, 'id' => $model->id]);
-                 }
+                 },
+                'template' => '{view},{update},{delete},{documentos}',
+                'buttons' => [
+                        'documentos' => function ($url, $model, $key) {
+                            if(Yii::$app->user->can('acederViatura')){
+
+                                return Html::a('<i class="bi bi-archive">Docs</i>', Url::toRoute(['documento/create', 'id' => $model->id]));
+
+                            }
+                        }
+                ]
             ],
         ],
     ]); ?>

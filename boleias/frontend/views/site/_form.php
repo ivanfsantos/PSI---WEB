@@ -1,5 +1,6 @@
 <?php
 
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -18,7 +19,9 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'data_hora')->input('datetime-local')?>
 
-    <?= $form->field($model, 'viatura_id')->textInput() ?>
+    <?= $form->field($model, 'viatura_id')->dropDownList(
+        ArrayHelper::map($viaturas, 'id', 'modelo'),
+        ['prompt' => 'Selecione uma viatura']); ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

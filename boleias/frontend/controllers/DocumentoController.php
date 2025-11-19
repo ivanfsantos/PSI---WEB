@@ -8,6 +8,7 @@ use common\models\Perfil;
 use common\models\UploadDocumentoCarta;
 use common\models\UploadDocumentoCartao;
 use frontend\models\DocumentoSearch;
+use yii\filters\AccessControl;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -27,6 +28,18 @@ class DocumentoController extends Controller
         return array_merge(
             parent::behaviors(),
             [
+                'access' => [
+                    'class' => AccessControl::class,
+                    'only' => ['logout', 'signup','index','create'],
+                    'rules' => [
+                        [
+                            'actions' => ['index','create'],
+                            'allow' => true,
+                            'roles' => ['acederDocumento'],
+                        ],
+                    ],
+                ],
+
                 'verbs' => [
                     'class' => VerbFilter::className(),
                     'actions' => [

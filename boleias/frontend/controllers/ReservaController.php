@@ -2,17 +2,21 @@
 
 namespace frontend\controllers;
 
+use common\models\Boleia;
 use common\models\Perfil;
-use common\models\PerfilSearch;
+use common\models\Reserva;
+use common\models\ReservaSearch;
 use Yii;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use function ActiveRecord\all;
 
 /**
- * PerfilController implements the CRUD actions for Perfil model.
+ * ReservaController implements the CRUD actions for Reserva model.
  */
-class PerfilController extends Controller
+class ReservaController extends Controller
 {
     /**
      * @inheritDoc
@@ -28,21 +32,42 @@ class PerfilController extends Controller
                         'delete' => ['POST'],
                     ],
                 ],
+
+                'access' => [
+                    'class' => AccessControl::className(),
+                    'only' => [],
+                    'rules' => [
+
+                        [
+                            'actions' => [],
+                            'allow' => true,
+                            'roles' => [],
+                        ],
+
+                    ]
+                ]
             ]
         );
     }
 
     /**
-     * Lists all Perfil models.
+     * Lists all Reserva models.
      *
      * @return string
      */
     public function actionIndex($id)
     {
+        $perfil = Perfil::findOne(['user_id' => $id]);
 
-        $searchModel = new PerfilSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        $dataProvider->query->andWhere(['user_id' => $id]);
+        if (!$perfil) {
+            throw new \yii\web\NotFoundHttpException('Perfil não encontrado.');
+        }
+
+        $searchModel = new ReservaSearch();
+        $dataProvider = $searchModel->search($this->request->queryParams);
+
+        $dataProvider->query->andWhere(['perfil_id' => $perfil->id]);
+
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -51,7 +76,7 @@ class PerfilController extends Controller
     }
 
     /**
-     * Displays a single Perfil model.
+     * Displays a single Reserva model.
      * @param int $id ID
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
@@ -64,53 +89,53 @@ class PerfilController extends Controller
     }
 
     /**
-     * Creates a new Perfil model.
+     * Creates a new Reserva model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
-    public function actionCreate()
+    public function actionCreate($id)
     {
-        // se não estiver autenticado
-        if (Yii::$app->user->isGuest) {
-            return $this->goHome();
+
+        $model = new Reserva();
+        $userId = Yii::$app->user->identity->id;
+
+        $perfilId = Perfil::findOne(['user_id' => $userId]);
+
+
+
+        $model->estado = 'Pendente';
+        $model->perfil_id = $perfilId;
+        $model->boleia_id = $id;
+
+        $viatura = $model->boleia->viatura;
+
+
+        if ($viatura->lugares_disponiveis <= 0) {
+            Yii::$app->session->setFlash('error', 'Não há lugares disponíveis!');
+            return $this->redirect(['index']);
         }
 
-        $perfil = Perfil::findOne(['user_id' => Yii::$app->user->id]);
+            if ($this->request->isPost) {
+                if ($model->load($this->request->post()) && $model->save()) {
 
-        if ($perfil) {
-            return $this->redirect(['index','id'=>$perfil->user_id]);
-        }
-        else {
+                    $viatura->lugares_disponiveis--;
+                    $viatura->save();
 
-            $model = new Perfil();
-            $model->user_id = Yii::$app->user->id;
-
-            if ($model->load($this->request->post()) && $model->save()) {
-                $auth = \Yii::$app->authManager;
-                if($model->condutor){
-                    $role = $auth->getRole('condutor');
-                } else {
-                    $role = $auth->getRole('passageiro');
+                    return $this->redirect(['view', 'id' => $model->id]);
                 }
-
-                $auth->assign($role, $model->user_id);
-                return $this->redirect(['view', 'id' => $model->id]);
-            }
-
-            else {
+            } else {
                 $model->loadDefaultValues();
             }
 
-
             return $this->render('create', [
                 'model' => $model,
+                'perfil_id' => $perfilId,
+                'boleia_id' => $id,
             ]);
-
-        }
     }
 
     /**
-     * Updates an existing Perfil model.
+     * Updates an existing Reserva model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param int $id ID
      * @return string|\yii\web\Response
@@ -130,7 +155,7 @@ class PerfilController extends Controller
     }
 
     /**
-     * Deletes an existing Perfil model.
+     * Deletes an existing Reserva model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param int $id ID
      * @return \yii\web\Response
@@ -138,21 +163,29 @@ class PerfilController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $reserva = $this->findModel($id);
 
-        return $this->redirect(['index','id'=> $id]);
+        $boleia = $reserva->boleia;
+        $viatura = $boleia->viatura;
+
+        $viatura->lugares_disponiveis++;
+        $viatura->save(false);
+
+        $reserva->delete();
+
+        return $this->redirect(['/site/index']);
     }
 
     /**
-     * Finds the Perfil model based on its primary key value.
+     * Finds the Reserva model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param int $id ID
-     * @return Perfil the loaded model
+     * @return Reserva the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Perfil::findOne(['id' => $id])) !== null) {
+        if (($model = Reserva::findOne(['id' => $id])) !== null) {
             return $model;
         }
 
