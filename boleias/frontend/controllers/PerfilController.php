@@ -75,10 +75,10 @@ class PerfilController extends Controller
             return $this->goHome();
         }
 
-        $perfil = Perfil::findOne(['user_id' => Yii::$app->user->id]);
+        $perfilExistente = Perfil::findOne(['user_id' => Yii::$app->user->id]);
 
-        if ($perfil) {
-            return $this->redirect(['index','id'=>$perfil->user_id]);
+        if ($perfilExistente) {
+            return $this->redirect(['index','id'=>$perfilExistente->user_id]);
         }
         else {
 
@@ -86,14 +86,6 @@ class PerfilController extends Controller
             $model->user_id = Yii::$app->user->id;
 
             if ($model->load($this->request->post()) && $model->save()) {
-                $auth = \Yii::$app->authManager;
-                if($model->condutor){
-                    $role = $auth->getRole('condutor');
-                } else {
-                    $role = $auth->getRole('passageiro');
-                }
-
-                $auth->assign($role, $model->user_id);
                 return $this->redirect(['view', 'id' => $model->id]);
             }
 

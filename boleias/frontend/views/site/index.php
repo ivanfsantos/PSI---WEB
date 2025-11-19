@@ -1,140 +1,52 @@
 <?php
 
-use common\models\Boleia;
-use yii\helpers\Html;
-use yii\helpers\Url;
-use yii\grid\ActionColumn;
-use yii\grid\GridView;
-
 /** @var yii\web\View $this */
-/** @var common\models\BoleiaSearch $searchModel */
-/** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Boleias';
-$this->params['breadcrumbs'][] = $this->title;
+$this->title = 'My Yii Application';
 ?>
-
 <div class="site-index">
     <div class="p-5 mb-4 bg-transparent rounded-3">
         <div class="container-fluid py-5 text-center">
-            <h1 class="display-4">Boleias</h1>
-            <br>
-            <?php
-
-                if(Yii::$app->user->can('criarBoleia')){
-                    ?>
-
-                    <p><a class="btn btn-lg btn-success" href="site/create">Criar Boleia</a></p>
-
-            <?php
-                } ?>
-
-
-
+            <h1 class="display-4">Congratulations!</h1>
+            <p class="fs-5 fw-light">You have successfully created your Yii-powered application.</p>
+            <p><a class="btn btn-lg btn-success" href="https://www.yiiframework.com">Get started with Yii</a></p>
         </div>
     </div>
+
+    <div class="body-content">
+
+        <div class="row">
+            <div class="col-lg-4">
+                <h2>Heading</h2>
+
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
+                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
+                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
+                    fugiat nulla pariatur.</p>
+
+                <p><a class="btn btn-outline-secondary" href="https://www.yiiframework.com/doc/">Yii Documentation &raquo;</a></p>
+            </div>
+            <div class="col-lg-4">
+                <h2>Heading</h2>
+
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
+                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
+                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
+                    fugiat nulla pariatur.</p>
+
+                <p><a class="btn btn-outline-secondary" href="https://www.yiiframework.com/forum/">Yii Forum &raquo;</a></p>
+            </div>
+            <div class="col-lg-4">
+                <h2>Heading</h2>
+
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
+                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
+                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
+                    fugiat nulla pariatur.</p>
+
+                <p><a class="btn btn-outline-secondary" href="https://www.yiiframework.com/extensions/">Yii Extensions &raquo;</a></p>
+            </div>
+        </div>
+
+    </div>
 </div>
-
-
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
-<?= GridView::widget([
-    'dataProvider' => $dataProvider,
-    'columns' => [
-        'origem',
-        'destino',
-        'data_hora',
-
-        [
-            'attribute' => 'viatura_id',
-            'label' => 'Lugares',
-            'value' => function ($model) {
-                return $model->viatura->lugares_disponiveis;
-            }
-        ],
-        [
-            'attribute' => 'viatura_id',
-            'label' => 'Carro',
-            'value' => function ($model) {
-                return $model->viatura->modelo;
-            }
-        ],
-
-        [
-            'class' => ActionColumn::className(),
-            'urlCreator' => function ($action, $model, $key, $index) {
-                return Url::toRoute([$action, 'id' => $model->id]);
-            },
-
-            'template' => '{view} {update} {delete} {reservar}',
-
-            'visibleButtons' => [
-                'delete' => function ($model, $key, $index) {
-                    return $model->viatura->perfil->user_id == Yii::$app->user->id;
-                },
-
-                'update' => function ($model, $key, $index) {
-                    return $model->viatura->perfil->user_id == Yii::$app->user->id;
-                },
-
-                'reservar' => function ($model, $key, $index) {
-                    return $model->viatura->perfil->user_id != Yii::$app->user->id
-                        && $model->viatura->lugares_disponiveis > 0
-                        && Yii::$app->user->can('acederBoleia');
-                },
-
-                'view' => function ($model, $key, $index) {
-                    return true;
-                },
-            ],
-
-            'buttons' => [
-                'delete' => function ($url, $model, $key) {
-                    return Html::a(
-                        '<i class="bi bi-trash"></i> Remover',
-                        ['site/delete', 'id' => $model->id],
-                        [
-                            'class' => 'btn btn-danger btn-sm',
-                            'data' => [
-                                'confirm' => 'Tem a certeza que deseja remover esta boleia?',
-                                'method' => 'post',
-                            ],
-                        ]
-                    );
-                },
-
-                'update' => function ($url, $model, $key) {
-                    return Html::a(
-                        '<i class="bi bi-pencil"></i> Editar',
-                        ['site/update', 'id' => $model->id],
-                        ['class' => 'btn btn-warning btn-sm']
-                    );
-                },
-
-                'reservar' => function ($url, $model, $key) {
-                    return Html::a(
-                        '<i class="bi bi-archive"></i> Reservar',
-                        ['reserva/create', 'id' => $model->id],
-                        ['class' => 'btn btn-primary btn-sm']
-                    );
-                },
-
-                'view' => function ($url, $model, $key) {
-                    return Html::a(
-                        '<i class="bi bi-eye"></i> Ver',
-                        ['site/view', 'id' => $model->id],
-                        ['class' => 'btn btn-info btn-sm']
-                    );
-                },
-            ],
-        ],
-
-    ],
-]); ?>
-
-
-</div>
-
-
-
-

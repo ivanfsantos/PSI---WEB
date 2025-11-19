@@ -29,34 +29,25 @@ $this->beginPage();
 <?php $this->beginBody() ?>
 
 <!-- BACKEND NAVBAR -->
-<nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
-    <a href="<?= Url::to(['/site/index']) ?>" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
-        <h2 class="m-0 text-primary">Boleias</h2>
-    </a>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow sticky-top">
+    <a class="navbar-brand px-4" href="<?= Url::to(['/site/index']) ?>">Boleias</a>
     <button class="navbar-toggler me-4" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
         <span class="navbar-toggler-icon"></span>
     </button>
-
-
-    <?php if (Yii::$app->user->isGuest): ?>
-        <a href="<?= Url::to(['/site/login']) ?>" class="nav-item nav-link">Login</a>
-        <a href="<?= Url::to(['/site/signup']) ?>" class="nav-item nav-link">Signup</a>
-    <?php else: ?>
-    <?= Html::beginForm(['/site/logout'], 'post', ['class' => 'd-inline']) ?>
-
     <div class="collapse navbar-collapse" id="navbarCollapse">
+        <div class="navbar-nav ms-auto p-2 p-lg-0">
+            <a href="<?= Url::to(['/site/index']) ?>" class="nav-item nav-link">Dashboard</a>
 
-        <div class="navbar-nav ms-auto p-4 p-lg-0">
-            <a href="<?= Url::to(['/user/index']) ?>" class="nav-item nav-link">Users</a>
-
+            <?php if (Yii::$app->user->isGuest): ?>
+                <a href="<?= Url::to(['/site/login']) ?>" class="nav-item nav-link">Login</a>
+            <?php else: ?>
+                <?= Html::beginForm(['/site/logout'], 'post', ['class' => 'd-inline']) ?>
+                <button class="btn nav-link" style="border:none;background:none;">
+                    Logout (<?= Yii::$app->user->identity->username ?>)
+                </button>
+                <?= Html::endForm() ?>
+            <?php endif; ?>
         </div>
-        <button class="btn nav-link" style="border:none;background:none;">
-            Logout (<?= Yii::$app->user->identity->username ?>)
-        </button>
-
-        <?= Html::endForm() ?>
-        <?php endif; ?>
-    </div>
     </div>
 </nav>
 <!-- END NAVBAR -->

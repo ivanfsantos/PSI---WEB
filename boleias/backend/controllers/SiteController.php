@@ -20,16 +20,18 @@ class SiteController extends Controller
     public function behaviors()
     {
         return [
-                'access' => [
-
-                    'class' => AccessControl::class,
-                    'only' => ['signup' ,'index','create'],
-                    'rules' => [
-                        [
-                            'actions' => ['index'],
-                            'allow' => true,
-                            'roles' => ['acederBackend'],
-                        ],
+            'access' => [
+                'class' => AccessControl::class,
+                'rules' => [
+                    [
+                        'actions' => ['login', 'error'],
+                        'allow' => true,
+                    ],
+                    [
+                        'actions' => ['logout', 'index'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
                 ],
             ],
             'verbs' => [

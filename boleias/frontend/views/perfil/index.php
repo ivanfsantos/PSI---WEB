@@ -19,60 +19,64 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?php
 
-      $perfil = Perfil::findOne(['user_id' => Yii::$app->user->id]);
-      if(!$perfil) { ?>
+      $perfilExistente = Perfil::findOne(['user_id' => Yii::$app->user->id]);
+      if(!$perfilExistente) { ?>
 
     <p>
         <?= Html::a('Create Perfil', ['create'], ['class' => 'btn btn-success']) ?>
-
     </p>
           <?php
-      } else { ?>
-          <p>
-              <?php
-
-                if(Yii::$app->user->can('acederViatura')){
-                   echo Html::a('Ver Viaturas', ['viatura/index', 'id' => $perfil->id], ['class' => 'btn btn-success']);
-                }
-                ?>
-
-
-
-          </p>
-    <?php
       }
-    ?>
-
-
+      ?>
 
 
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'columns' => [
-            'nome',
-            'telefone',
-            'morada',
-            'genero',
-            'data_nascimento',
-            'condutor',
-            [
-                'class' => ActionColumn::className(),
-                'urlCreator' => function ($action, Perfil $model, $key, $index, $column) {
-                    return Url::toRoute([$action, 'id' => $model->id]);
-                 },
-                'template' => '{view},{update},{delete},{documentos}',
-                'buttons' => [
-                        'documentos' => function ($url, $model, $key) {
-                            if(Yii::$app->user->can('acederViatura')){
+            'dataProvider' => $dataProvider,
+            'columns' => [
+                    'nome',
+                    'telefone',
+                    'morada',
+                    'genero',
+                    'data_nascimento',
+                    'condutor',
+                    [
+                            'class' => ActionColumn::className(),
+                            'template' => '{view} {update} {delete} {avaliar}',
+                            'buttons' => [
+                                    'view' => fn($url,$model) =>
+                                    Html::a('Ver', $url, [
+                                            'class' => 'btn btn-primary btn-sm',
+                                            'style' => 'margin-right: 5px;'
+                                    ]),
 
-                                return Html::a('<i class="bi bi-archive">Docs</i>', Url::toRoute(['documento/create', 'id' => $model->id]));
+                                    'update' => fn($url,$model) =>
+                                    Html::a('Editar', $url, [
+                                            'class' => 'btn btn-warning btn-sm',
+                                            'style' => 'margin-right: 5px;'
+                                    ]),
 
+                                    'delete' => fn($url,$model) =>
+                                    Html::a('Eliminar', $url, [
+                                            'class' => 'btn btn-danger btn-sm',
+                                            'style' => 'margin-right: 5px;',
+                                            'data-confirm' => 'Tem certeza?',
+                                            'data-method' => 'post'
+                                    ]),
+
+                                    'avaliar' => fn($url,$model) =>
+                                    Html::a('Avaliar', ['avaliacao/create','perfil_id' => $model->id], [
+                                            'class' => 'btn btn-secondary btn-sm',
+                                            'style' => 'margin-right: 5px;'
+                                    ]),
+                            ],
+
+                            'urlCreator' => function ($action, Perfil $model, $key, $index, $column) {
+                                return Url::toRoute([$action, 'id' => $model->id]);
                             }
-                        }
-                ]
+                    ],
             ],
     ]); ?>
 

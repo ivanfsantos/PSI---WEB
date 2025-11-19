@@ -135,7 +135,7 @@ class RbacController extends Controller
         $updateEstatistica->description = 'Dar update a uma estatistica';
         $auth->add($updateEstatistica);
 
-        $elimnarEstatistica = $auth->createPermission('eliminarEstatistica');
+        $elimnarEstatistica = $auth->createPermission('elimnarEstatistica');
         $elimnarEstatistica->description = 'Eliminar uma estatistica';
         $auth->add($elimnarEstatistica);
 
@@ -180,7 +180,27 @@ class RbacController extends Controller
         $acederViatura->description = 'Aceder ás viaturas';
         $auth->add($acederViatura);
 
+        //Login
+        $fazerLogin = $auth->createPermission('fazerLogin');
+        $fazerLogin->description = 'Fazer login';
+        $auth->add($fazerLogin);
 
+        $fazerLogout = $auth->createPermission('fazerLogout');
+        $fazerLogout->description = 'Fazer logout';
+        $auth->add($fazerLogout);
+
+        //Admin
+        $criarAdmin = $auth->createPermission('criarAdmin');
+        $criarAdmin->description = 'Criar um Admin';
+        $auth->add($criarAdmin);
+
+        $editarAdmin = $auth->createPermission('editarAdmin');
+        $editarAdmin->description = 'Editar um Admin';
+        $auth->add($editarAdmin);
+
+        $eliminarAdmin = $auth->createPermission('eliminarAdmin');
+        $eliminarAdmin->description = 'Eliminar um Admin';
+        $auth->add($eliminarAdmin);
 
         // ====== Definir Papéis =====
 
@@ -188,7 +208,8 @@ class RbacController extends Controller
         $passageiro = $auth->createRole('passageiro');
         $auth->add($passageiro);
 
-
+        $auth->addChild($passageiro, $fazerLogin);
+        $auth->addChild($passageiro, $fazerLogout);
         $auth->addChild($passageiro, $acederFrontend);
         $auth->addChild($passageiro, $acederAvaliacao);
         $auth->addChild($passageiro, $acederReserva);
@@ -204,52 +225,52 @@ class RbacController extends Controller
         $auth->addChild($passageiro, $criarPassageiro);
         $auth->addChild($passageiro, $editarPassageiro);
         $auth->addChild($passageiro, $eliminarPassageiro);
-        $auth->addChild($passageiro, $acederBoleia);
 
 
-
-        // adiciona a role "condutor"
-        $condutor = $auth->createRole('condutor');
-        $auth->add($condutor);
+        // adciona a role "motorista"
+        $motorista = $auth->createRole('motorista');
+        $auth->add($motorista);
 
         //Herda permissões de Passageiro
-        $auth->addChild($condutor, $passageiro);
+        $auth->addChild($motorista, $passageiro);
 
-        // Permissões exclusivas de condutor
-        $auth->addChild($condutor, $criarCondutor);
-        $auth->addChild($condutor, $editarCondutor);
-        $auth->addChild($condutor, $eliminarCondutor);
-        $auth->addChild($condutor, $acederDocumento);
-        $auth->addChild($condutor, $acederBoleia);
-        $auth->addChild($condutor, $acederViatura);
-        $auth->addChild($condutor, $criarDocumento);
-        $auth->addChild($condutor, $editarDocumento);
-        $auth->addChild($condutor, $eliminarDocumento);
-        $auth->addChild($condutor, $criarBoleia);
-        $auth->addChild($condutor, $editarBoleia);
-        $auth->addChild($condutor, $eliminarBoleia);
-        $auth->addChild($condutor, $criarViatura);
-        $auth->addChild($condutor, $editarViatura);
-        $auth->addChild($condutor, $eliminarViatura);
+        // Permissões exclusivas de Motorista
+        $auth->addChild($motorista, $criarCondutor);
+        $auth->addChild($motorista, $editarCondutor);
+        $auth->addChild($motorista, $eliminarCondutor);
+        $auth->addChild($motorista, $acederDocumento);
+        $auth->addChild($motorista, $acederBoleia);
+        $auth->addChild($motorista, $acederViatura);
+        $auth->addChild($motorista, $criarDocumento);
+        $auth->addChild($motorista, $editarDocumento);
+        $auth->addChild($motorista, $eliminarDocumento);
+        $auth->addChild($motorista, $criarBoleia);
+        $auth->addChild($motorista, $editarBoleia);
+        $auth->addChild($motorista, $eliminarBoleia);
+        $auth->addChild($motorista, $criarViatura);
+        $auth->addChild($motorista, $editarViatura);
+        $auth->addChild($motorista, $eliminarViatura);
 
 
         // adciona a role "admin" e adicionar childs para ter as mesmas permissoes que as childs
         $admin = $auth->createRole('admin');
         $auth->add($admin);
         $auth->addChild($admin , $passageiro);
-        $auth->addChild($admin , $condutor);
+        $auth->addChild($admin , $motorista);
 
         //Permissões exclusivas para Admin
         $auth->addChild($admin , $criarAdmin);
         $auth->addChild($admin , $editarAdmin);
         $auth->addChild($admin , $eliminarAdmin);
         $auth->addChild($admin , $acederBoleia);
-        $auth->addChild($admin , $acederBackend);
+        $auth->addChild($admin , $acederEstatistica);
 
         // ==== Atribuir Papéis a Utilizadores ====
 
         // Substituir pelos IDs reais dos utilizadores no banco de dados
         $auth->assign($admin, 1);   // Admin (ID 1)
+        $auth->assign($passageiro, 2); // Passageiro (ID 2)
+        $auth->assign($motorista, 3); // Motorista (ID 3)
 
         echo "RBAC configurado com sucesso.\n";
     }
