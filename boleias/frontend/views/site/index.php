@@ -19,7 +19,17 @@ $this->params['breadcrumbs'][] = $this->title;
         <div class="container-fluid py-5 text-center">
             <h1 class="display-4">Boleias</h1>
             <br>
-            <p><a class="btn btn-lg btn-success" href="site/create">Criar Boleia</a></p>
+            <?php
+
+                if(Yii::$app->user->can('criarBoleia')){
+                    ?>
+
+                    <p><a class="btn btn-lg btn-success" href="site/create">Criar Boleia</a></p>
+
+            <?php
+                } ?>
+
+
 
         </div>
     </div>
@@ -28,9 +38,13 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'columns' => [
+<?= GridView::widget([
+    'dataProvider' => $dataProvider,
+    'columns' => [
+        'origem',
+        'destino',
+        'data_hora',
+
 
             'origem',
             'destino',
@@ -47,10 +61,95 @@ $this->params['breadcrumbs'][] = $this->title;
                 ],
                 'urlCreator' => function ($action, Boleia $model, $key, $index, $column) {
                     return Url::toRoute([$action, 'id' => $model->id]);
-                }
+                },
+
+        [
+            'attribute' => 'viatura_id',
+            'label' => 'Lugares',
+            'value' => function ($model) {
+                return $model->viatura->lugares_disponiveis;
+            }
+        ],
+        [
+            'attribute' => 'viatura_id',
+            'label' => 'Carro',
+            'value' => function ($model) {
+                return $model->viatura->modelo;
+            }
+        ],
+
+        [
+            'class' => ActionColumn::className(),
+            'urlCreator' => function ($action, $model, $key, $index) {
+                return Url::toRoute([$action, 'id' => $model->id]);
+            },
+
+            'template' => '{view} {update} {delete} {reservar}',
+
+            'visibleButtons' => [
+                'delete' => function ($model, $key, $index) {
+                    return $model->viatura->perfil->user_id == Yii::$app->user->id;
+                },
+
+                'update' => function ($model, $key, $index) {
+                    return $model->viatura->perfil->user_id == Yii::$app->user->id;
+                },
+
+                'reservar' => function ($model, $key, $index) {
+                    return $model->viatura->perfil->user_id != Yii::$app->user->id
+                        && $model->viatura->lugares_disponiveis > 0
+                        && Yii::$app->user->can('acederBoleia');
+                },
+
+                'view' => function ($model, $key, $index) {
+                    return true;
+                },
+            ],
+
+            'buttons' => [
+                'delete' => function ($url, $model, $key) {
+                    return Html::a(
+                        '<i class="bi bi-trash"></i> Remover',
+                        ['site/delete', 'id' => $model->id],
+                        [
+                            'class' => 'btn btn-danger btn-sm',
+                            'data' => [
+                                'confirm' => 'Tem a certeza que deseja remover esta boleia?',
+                                'method' => 'post',
+                            ],
+                        ]
+                    );
+                },
+
+                'update' => function ($url, $model, $key) {
+                    return Html::a(
+                        '<i class="bi bi-pencil"></i> Editar',
+                        ['site/update', 'id' => $model->id],
+                        ['class' => 'btn btn-warning btn-sm']
+                    );
+                },
+
+                'reservar' => function ($url, $model, $key) {
+                    return Html::a(
+                        '<i class="bi bi-archive"></i> Reservar',
+                        ['reserva/create', 'id' => $model->id],
+                        ['class' => 'btn btn-primary btn-sm']
+                    );
+                },
+
+                'view' => function ($url, $model, $key) {
+                    return Html::a(
+                        '<i class="bi bi-eye"></i> Ver',
+                        ['site/view', 'id' => $model->id],
+                        ['class' => 'btn btn-info btn-sm']
+                    );
+                },
+>>>>>>> dev
             ],
         ],
-    ]); ?>
+
+    ],
+]); ?>
 
 
 </div>

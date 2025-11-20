@@ -4,11 +4,11 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /** @var yii\web\View $this */
-/** @var frontend\models\DocumentoSearch $model */
+/** @var common\models\ReservaSearch $model */
 /** @var yii\widgets\ActiveForm $form */
 ?>
 
-<div class="documento-search">
+<div class="reserva-search">
 
     <?php $form = ActiveForm::begin([
         'action' => ['index'],
@@ -17,13 +17,11 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'id') ?>
 
-    <?= $form->field($model, 'carta_conducao') ?>
-
-    <?= $form->field($model, 'cartao_cidadao') ?>
-
-    <?= $form->field($model, 'valido') ?>
+    <?= $form->field($model, 'estado') ?>
 
     <?= $form->field($model, 'perfil_id') ?>
+
+    <?= $form->field($model, 'boleia_id') ?>
 
     <div class="form-group">
         <?= Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>

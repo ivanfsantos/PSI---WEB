@@ -1,19 +1,18 @@
 <?php
 
-namespace frontend\controllers;
+namespace backend\controllers;
 
-use app\models\User;
-use common\models\Viatura;
-use common\models\ViaturaSearch;
+use common\models\User;
+use common\models\UserSearch;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
 /**
- * ViaturaController implements the CRUD actions for Viatura model.
+ * UserController implements the CRUD actions for User model.
  */
-class ViaturaController extends Controller
+class UserController extends Controller
 {
     /**
      * @inheritDoc
@@ -22,52 +21,43 @@ class ViaturaController extends Controller
     {
         return array_merge(
             parent::behaviors(),
-            [
-                'access' => [
-                    'class' => AccessControl::class,
-                    'only' => ['logout', 'signup','index','create'],
-                    'rules' => [
-                        [
-                            'actions' => ['index','create'],
-                            'allow' => true,
-                            'roles' => ['acederViatura'],
-                        ],
-                    ],
-                ],
+            ['access' => [
 
-                'verbs' => [
-                    'class' => VerbFilter::className(),
-                    'actions' => [
-                        'delete' => ['POST'],
+                'class' => AccessControl::class,
+                'only' => ['index'],
+                'rules' => [
+
+                    [
+                        'actions' => ['index'],
+                        'allow' => true,
+                        'roles' => ['acederBackend'],
                     ],
+
                 ],
+            ]
             ]
         );
     }
 
     /**
-     * Lists all Viatura models.
+     * Lists all User models.
      *
      * @return string
      */
-    public function actionIndex($id)
+    public function actionIndex()
     {
-
-        $searchModel = new ViaturaSearch();
+        $searchModel = new UserSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
-        $dataProvider->query->andWhere(['perfil_id' => $id]);
-
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
-            'id' => $id
         ]);
     }
 
     /**
-     * Displays a single Viatura model.
-     * @param int $id ID
+     * Displays a single User model.
+     * @param int $id
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
      */
@@ -79,15 +69,13 @@ class ViaturaController extends Controller
     }
 
     /**
-     * Creates a new Viatura model.
+     * Creates a new User model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
-    public function actionCreate($id)
+    public function actionCreate()
     {
-
-        $model = new Viatura();
-        $model->perfil_id = $id;
+        $model = new User();
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
@@ -103,9 +91,9 @@ class ViaturaController extends Controller
     }
 
     /**
-     * Updates an existing Viatura model.
+     * Updates an existing User model.
      * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $id ID
+     * @param int $id
      * @return string|\yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
@@ -123,9 +111,9 @@ class ViaturaController extends Controller
     }
 
     /**
-     * Deletes an existing Viatura model.
+     * Deletes an existing User model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $id ID
+     * @param int $id
      * @return \yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
@@ -137,15 +125,15 @@ class ViaturaController extends Controller
     }
 
     /**
-     * Finds the Viatura model based on its primary key value.
+     * Finds the User model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $id ID
-     * @return Viatura the loaded model
+     * @param int $id
+     * @return User the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = Viatura::findOne(['id' => $id])) !== null) {
+        if (($model = User::findOne(['id' => $id])) !== null) {
             return $model;
         }
 

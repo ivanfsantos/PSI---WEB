@@ -49,6 +49,7 @@ $this->beginPage();
 
         <div class="navbar-nav ms-auto p-4 p-lg-0">
             <a href="<?= Url::to(['/perfil/index','id' => Yii::$app->user->id]) ?>" class="nav-item nav-link">Perfil</a>
+            <a href="<?= Url::to(['/reserva/index','id' => Yii::$app->user->id]) ?>" class="nav-item nav-link">Reservas</a>
 
         </div>
                 <button class="btn nav-link" style="border:none;background:none;">

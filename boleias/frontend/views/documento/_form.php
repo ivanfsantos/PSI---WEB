@@ -6,19 +6,21 @@ use yii\widgets\ActiveForm;
 /** @var yii\web\View $this */
 /** @var common\models\Documento $model */
 /** @var yii\widgets\ActiveForm $form */
+/** @var common\models\UploadDocumentoCarta $modelUploadCarta */
+/** @var common\models\UploadDocumentoCartao $modelUploadCartao */
 ?>
 
 <div class="documento-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin([
+        'options' => ['enctype' => 'multipart/form-data']
+    ]); ?>
 
-    <?= $form->field($model, 'carta_conducao')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($modelUploadCarta, 'cartaFile')->fileInput() ?><br>
 
-    <?= $form->field($model, 'cartao_cidadao')->textInput(['maxlength' => true]) ?>
+    <?= $form->field($modelUploadCartao, 'cartaoFile')->fileInput() ?>
 
-    <?= $form->field($model, 'valido')->textInput() ?>
 
-    <?= $form->field($model, 'perfil_id')->textInput() ?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
