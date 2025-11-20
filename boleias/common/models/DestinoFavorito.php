@@ -30,9 +30,10 @@ class DestinoFavorito extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['boleia_id'], 'default', 'value' => null],
-            [['boleia_id'], 'integer'],
-            [['boleia_id'], 'exist', 'skipOnError' => true, 'targetClass' => Boleia::class, 'targetAttribute' => ['boleia_id' => 'id']],
+            [['perfil_id', 'tipo', 'endereco'], 'required'],
+            [['perfil_id'], 'integer'],
+            [['tipo'], 'in', 'range' => ['origem', 'destino']],
+            [['endereco'], 'string', 'max' => 255],
         ];
     }
 
@@ -43,7 +44,9 @@ class DestinoFavorito extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'boleia_id' => 'Boleia ID',
+            'perfil_id' => 'Perfil',
+            'tipo' => 'Tipo',
+            'endereco' => 'Endereço',
         ];
     }
 
@@ -52,9 +55,9 @@ class DestinoFavorito extends \yii\db\ActiveRecord
      *
      * @return \yii\db\ActiveQuery
      */
-    public function getBoleia()
+    public function getPerfil()
     {
-        return $this->hasOne(Boleia::class, ['id' => 'boleia_id']);
+        return $this->hasOne(Perfil::class, ['id' => 'perfil_id']);
     }
 
 }

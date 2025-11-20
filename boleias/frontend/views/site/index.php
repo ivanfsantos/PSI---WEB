@@ -37,6 +37,14 @@ $this->params['breadcrumbs'][] = $this->title;
             'data_hora',
             [
                 'class' => ActionColumn::className(),
+                'template' => '{view} {update} {delete} {favoritos}', // <- OBRIGATÓRIO
+                'buttons' => [
+                    'favoritos' => function ($url, $model) {
+                        return Html::a('💚','site/add-favorito/'. $model->id);
+
+                    },
+
+                ],
                 'urlCreator' => function ($action, Boleia $model, $key, $index, $column) {
                     return Url::toRoute([$action, 'id' => $model->id]);
                 }

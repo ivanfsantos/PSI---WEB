@@ -4,10 +4,15 @@ namespace frontend\controllers;
 
 use common\models\Boleia;
 use common\models\BoleiaSearch;
+use common\models\DestinoFavorito;
+use common\models\DestinoFavoritoSearch;
+use common\models\Perfil;
 use frontend\models\ResendVerificationEmailForm;
 use frontend\models\VerifyEmailForm;
 use Yii;
 use yii\base\InvalidArgumentException;
+use yii\helpers\ArrayHelper;
+use yii\helpers\Html;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
@@ -85,6 +90,20 @@ class SiteController extends Controller
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
+    }
+
+    public function actionAddFavorito($id)
+    {
+        $perfil = Perfil::findOne(['user_id'=>Yii::$app->user->id]);
+        $favorito = DestinoFavorito::findOne(['boleia_id'=>$id,
+            'perfil_id'=>$perfil->id]);
+
+        // TODO: Se já existir um favorito, redireciono de volta para boleias
+        // TODO: Se não existir nos favoritos, adiciono em DestinoFavorito e depois redireciono para lista de boleias
+        // TODO: Depois que o inserir boleias estiver pronto, criar uma nova lista na view de boleias, apenas com os favoritos
+
+
+
     }
 
 
