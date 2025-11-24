@@ -20,121 +20,102 @@ $this->params['breadcrumbs'][] = $this->title;
             <h1 class="display-4">Boleias</h1>
             <br>
             <?php
-
-                if(Yii::$app->user->can('criarBoleia')){
-                    ?>
-
-                    <p><a class="btn btn-lg btn-success" href="site/create">Criar Boleia</a></p>
-
-            <?php
-                } ?>
-
-
-
+            if(Yii::$app->user->can('criarBoleia')){
+                ?>
+                <p><a class="btn btn-lg btn-success" href="site/create">Criar Boleia</a></p>
+                <?php
+            } ?>
         </div>
     </div>
 </div>
 
+<?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+<div class="card p-3 mb-5 bg-white border border-5 rounded-4">
 
-<?= GridView::widget([
-    'dataProvider' => $dataProvider,
-    'columns' => [
-        'origem',
-        'destino',
-        'data_hora',
-
-        [
-            'attribute' => 'viatura_id',
-            'label' => 'Lugares',
-            'value' => function ($model) {
-                return $model->viatura->lugares_disponiveis;
-            }
-        ],
-        [
-            'attribute' => 'viatura_id',
-            'label' => 'Carro',
-            'value' => function ($model) {
-                return $model->viatura->modelo;
-            }
-        ],
-
-        [
-            'class' => ActionColumn::className(),
-            'urlCreator' => function ($action, $model, $key, $index) {
-                return Url::toRoute([$action, 'id' => $model->id]);
-            },
-
-            'template' => '{view} {update} {delete} {reservar}',
-
-            'visibleButtons' => [
-                'delete' => function ($model, $key, $index) {
-                    return $model->viatura->perfil->user_id == Yii::$app->user->id;
-                },
-
-                'update' => function ($model, $key, $index) {
-                    return $model->viatura->perfil->user_id == Yii::$app->user->id;
-                },
-
-                'reservar' => function ($model, $key, $index) {
-                    return $model->viatura->perfil->user_id != Yii::$app->user->id
-                        && $model->viatura->lugares_disponiveis > 0
-                        && Yii::$app->user->can('acederBoleia');
-                },
-
-                'view' => function ($model, $key, $index) {
-                    return true;
-                },
+    <?= GridView::widget([
+        'dataProvider' => $dataProvider,
+        'summary' => '',
+        'options' => ['class' => 'grid-view table-responsive'],
+        'columns' => [
+            'origem',
+            'destino',
+            'data_hora',
+            [
+                'attribute' => 'viatura_id',
+                'label' => 'Lugares',
+                'value' => function ($model) {
+                    return $model->viatura->lugares_disponiveis;
+                }
             ],
-
-            'buttons' => [
-                'delete' => function ($url, $model, $key) {
-                    return Html::a(
-                        '<i class="bi bi-trash"></i> Remover',
-                        ['site/delete', 'id' => $model->id],
-                        [
-                            'class' => 'btn btn-danger btn-sm',
-                            'data' => [
-                                'confirm' => 'Tem a certeza que deseja remover esta boleia?',
-                                'method' => 'post',
-                            ],
-                        ]
-                    );
+            [
+                'attribute' => 'viatura_id',
+                'label' => 'Carro',
+                'value' => function ($model) {
+                    return $model->viatura->modelo;
+                }
+            ],
+            [
+                'class' => ActionColumn::className(),
+                'urlCreator' => function ($action, $model, $key, $index) {
+                    return Url::toRoute([$action, 'id' => $model->id]);
                 },
-
-                'update' => function ($url, $model, $key) {
-                    return Html::a(
-                        '<i class="bi bi-pencil"></i> Editar',
-                        ['site/update', 'id' => $model->id],
-                        ['class' => 'btn btn-warning btn-sm']
-                    );
-                },
-
-                'reservar' => function ($url, $model, $key) {
-                    return Html::a(
-                        '<i class="bi bi-archive"></i> Reservar',
-                        ['reserva/create', 'id' => $model->id],
-                        ['class' => 'btn btn-primary btn-sm']
-                    );
-                },
-
-                'view' => function ($url, $model, $key) {
-                    return Html::a(
-                        '<i class="bi bi-eye"></i> Ver',
-                        ['site/view', 'id' => $model->id],
-                        ['class' => 'btn btn-info btn-sm']
-                    );
-                },
+                'template' => '{view} {update} {delete} {reservar}',
+                'visibleButtons' => [
+                    'delete' => function ($model, $key, $index) {
+                        return $model->viatura->perfil->user_id == Yii::$app->user->id;
+                    },
+                    'update' => function ($model, $key, $index) {
+                        return $model->viatura->perfil->user_id == Yii::$app->user->id;
+                    },
+                    'reservar' => function ($model, $key, $index) {
+                        return $model->viatura->perfil->user_id != Yii::$app->user->id
+                            && $model->viatura->lugares_disponiveis > 0
+                            && Yii::$app->user->can('acederBoleia');
+                    },
+                    'view' => function ($model, $key, $index) {
+                        return true;
+                    },
+                ],
+                'buttons' => [
+                    'delete' => function ($url, $model, $key) {
+                        return Html::a(
+                            '<i class="bi bi-trash"></i> Remover',
+                            ['site/delete', 'id' => $model->id],
+                            [
+                                'class' => 'btn btn-danger btn-sm',
+                                'data' => [
+                                    'confirm' => 'Tem a certeza que deseja remover esta boleia?',
+                                    'method' => 'post',
+                                ],
+                            ]
+                        );
+                    },
+                    'update' => function ($url, $model, $key) {
+                        return Html::a(
+                            '<i class="bi bi-pencil"></i> Editar',
+                            ['site/update', 'id' => $model->id],
+                            ['class' => 'btn btn-warning btn-sm']
+                        );
+                    },
+                    'reservar' => function ($url, $model, $key) {
+                        return Html::a(
+                            '<i class="bi bi-archive"></i> Reservar',
+                            ['reserva/create', 'id' => $model->id],
+                            ['class' => 'btn btn-primary btn-sm']
+                        );
+                    },
+                    'view' => function ($url, $model, $key) {
+                        return Html::a(
+                            '<i class="bi bi-eye"></i> Ver',
+                            ['site/view', 'id' => $model->id],
+                            ['class' => 'btn btn-info btn-sm']
+                        );
+                    },
+                ],
             ],
         ],
-
-    ],
-]); ?>
-
-
+    ]); ?>
 </div>
 
-
-
-
+</div>

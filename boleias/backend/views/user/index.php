@@ -18,7 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Create User', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Create User', ['user/signup'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
@@ -26,6 +26,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        'summary' => '', // Add this line to hide the summary text
         'columns' => [
             'username',
 
@@ -36,9 +37,40 @@ $this->params['breadcrumbs'][] = $this->title;
             //'verification_token',
             [
                 'class' => ActionColumn::className(),
+                'template' => '{view} {update} {delete}', // Explicitly define standard buttons
                 'urlCreator' => function ($action, User $model, $key, $index, $column) {
+                    // Ensures the URL points correctly to the User controller actions
                     return Url::toRoute([$action, 'id' => $model->id]);
-                 }
+                },
+                'buttons' => [
+                    'view' => function ($url, $model, $key) {
+                        return Html::a(
+                            '<i class="bi bi-eye"></i> Ver',
+                            $url,
+                            ['class' => 'btn btn-info btn-sm']
+                        );
+                    },
+                    'update' => function ($url, $model, $key) {
+                        return Html::a(
+                            '<i class="bi bi-pencil"></i> Editar',
+                            $url,
+                            ['class' => 'btn btn-warning btn-sm']
+                        );
+                    },
+                    'delete' => function ($url, $model, $key) {
+                        return Html::a(
+                            '<i class="bi bi-trash"></i> Remover',
+                            $url,
+                            [
+                                'class' => 'btn btn-danger btn-sm',
+                                'data' => [
+                                    'confirm' => 'Tem a certeza que deseja remover este utilizador?',
+                                    'method' => 'post',
+                                ],
+                            ]
+                        );
+                    },
+                ],
             ],
         ],
     ]); ?>

@@ -48,6 +48,10 @@ $this->beginPage();
 
         <div class="navbar-nav ms-auto p-4 p-lg-0">
             <a href="<?= Url::to(['/user/index']) ?>" class="nav-item nav-link">Users</a>
+            <a href="<?= Url::to(['/documento/index']) ?>" class="nav-item nav-link">Docs</a>
+            <a href="<?= Url::to(['../../frontend/web/site/index']) ?>" class="nav-item nav-link">FRONTEND</a>
+
+
 
         </div>
         <button class="btn nav-link" style="border:none;background:none;">
