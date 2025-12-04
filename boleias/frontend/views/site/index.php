@@ -59,7 +59,7 @@ $this->params['breadcrumbs'][] = $this->title;
         },
 
     ];
-    if(!$perfil->condutor){
+    if($perfil && !$perfil->condutor){
         $buttons['wishlist'] = function ($url, $model, $key) {
             $jaExiste = count($model->destinosFavoritos);
             $texto = $jaExiste ? '<i class="bi bi-eye"></i> Remover WishList' : '<i class="bi bi-eye"></i> WishList';
@@ -190,4 +190,4 @@ $this->params['breadcrumbs'][] = $this->title;
     ]); ?>
 </div>
 
-</div>
+

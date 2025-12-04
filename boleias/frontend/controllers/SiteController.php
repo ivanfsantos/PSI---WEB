@@ -102,16 +102,20 @@ class SiteController extends Controller
     {
         if(!Yii::$app->user->isGuest){
 
+            $perfil = Perfil::findOne(['user_id' => Yii::$app->user->id]);
+
             $searchModel = new BoleiaSearch();
             $dataProvider = $searchModel->search($this->request->queryParams);
 
             return $this->render('index', [
                 'searchModel' => $searchModel,
                 'dataProvider' => $dataProvider,
-
+                'perfil' => $perfil,
             ]);
-        }else
+
+        } else {
             return $this->redirect(['site/login']);
+        }
     }
 
     public function actionAddFavorito($id)
@@ -253,44 +257,6 @@ class SiteController extends Controller
         return $this->goHome();
     }
 
-    /**
-     * Displays contact page.
-     *
-     * @return mixed
-     */
-    public function actionContact()
-    {
-        $model = new ContactForm();
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            if ($model->sendEmail(Yii::$app->params['adminEmail'])) {
-                Yii::$app->session->setFlash('success', 'Thank you for contacting us. We will respond to you as soon as possible.');
-            } else {
-                Yii::$app->session->setFlash('error', 'There was an error sending your message.');
-            }
-
-            return $this->refresh();
-        }
-
-        return $this->render('contact', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Displays about page.
-     *
-     * @return mixed
-     */
-    public function actionAbout()
-    {
-        return $this->render('about');
-    }
-
-    /**
-     * Signs user up.
-     *
-     * @return mixed
-     */
     public function actionSignup()
     {
         $model = new SignupForm();

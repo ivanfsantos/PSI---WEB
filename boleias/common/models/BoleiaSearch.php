@@ -39,14 +39,19 @@ class BoleiaSearch extends Boleia
      *
      * @return ActiveDataProvider
      */
-    public function search($params, $formName = null)
-    {
-        $query = Boleia::find()->joinWith(['destinosFavoritos'=>function (\Yii\db\ActiveQuery $query) {
-            $perfil = Perfil::findOne(['user_id'=>\Yii::$app->user->id]);
-            $query->on('destinos_favoritos.perfil_id = :perfil_id',[':perfil_id'=>$perfil->id]);
-        }]);
 
-        // add conditions that should always apply here
+        public function search($params, $formName = null)
+    {
+        $perfil = Perfil::findOne(['user_id' => \Yii::$app->user->id]);
+
+        $query = Boleia::find();
+
+        // Só adiciona o join se o perfil existir
+        if ($perfil) {
+            $query->joinWith(['destinosFavoritos' => function (\yii\db\ActiveQuery $query) use ($perfil) {
+                $query->on('destinos_favoritos.perfil_id = :perfil_id', [':perfil_id' => $perfil->id]);
+            }]);
+        }
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -55,8 +60,6 @@ class BoleiaSearch extends Boleia
         $this->load($params, $formName);
 
         if (!$this->validate()) {
-            // uncomment the following line if you do not want to return any records when validation fails
-            // $query->where('0=1');
             return $dataProvider;
         }
 
@@ -72,4 +75,5 @@ class BoleiaSearch extends Boleia
 
         return $dataProvider;
     }
-}
+
+    }
