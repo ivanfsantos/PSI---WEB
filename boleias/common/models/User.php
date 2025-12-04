@@ -210,4 +210,12 @@ class User extends ActiveRecord implements IdentityInterface
     {
         $this->password_reset_token = null;
     }
+
+
+    public function getPerfil()
+    {
+        return $this->hasOne(Perfil::className(), ['user_id' => 'id']);
+    }
+
+
 }

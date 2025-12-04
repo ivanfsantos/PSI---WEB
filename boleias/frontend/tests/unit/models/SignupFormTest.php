@@ -3,7 +3,7 @@
 namespace frontend\tests\unit\models;
 
 use common\fixtures\UserFixture;
-use frontend\models\SignupForm;
+use common\models\SignupAdmin;
 
 class SignupFormTest extends \Codeception\Test\Unit
 {
@@ -25,13 +25,13 @@ class SignupFormTest extends \Codeception\Test\Unit
 
     public function testCorrectSignup()
     {
-        $model = new SignupForm([
+        $model = new SignupAdmin([
             'username' => 'some_username',
             'email' => 'some_email@example.com',
             'password' => 'some_password',
         ]);
 
-        $user = $model->signup();
+        $user = $model->signupAdmin();
         verify($user)->notEmpty();
 
         /** @var \common\models\User $user */
@@ -54,13 +54,13 @@ class SignupFormTest extends \Codeception\Test\Unit
 
     public function testNotCorrectSignup()
     {
-        $model = new SignupForm([
+        $model = new SignupAdmin([
             'username' => 'troy.becker',
             'email' => 'nicolas.dianna@hotmail.com',
             'password' => 'some_password',
         ]);
 
-        verify($model->signup())->empty();
+        verify($model->signupAdmin())->empty();
         verify($model->getErrors('username'))->notEmpty();
         verify($model->getErrors('email'))->notEmpty();
 

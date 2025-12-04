@@ -1,15 +1,14 @@
 <?php
 
-namespace frontend\models;
+namespace common\models;
 
 use Yii;
 use yii\base\Model;
-use common\models\User;
 
 /**
  * Signup form
  */
-class SignupForm extends Model
+class SignupAdmin extends Model
 {
     public $username;
     public $email;
@@ -43,21 +42,30 @@ class SignupForm extends Model
      *
      * @return bool whether the creating new account was successful and email was sent
      */
-    public function signup()
+    public function signupAdmin()
     {
         if (!$this->validate()) {
             return null;
         }
-        
+
         $user = new User();
         $user->username = $this->username;
         $user->email = $this->email;
         $user->status = User::STATUS_ACTIVE;
+
         $user->setPassword($this->password);
         $user->generateAuthKey();
         $user->generateEmailVerificationToken();
 
-        return $user->save() && $this->sendEmail($user);
+
+
+        $auth = Yii::$app->authManager;
+        $role = $auth->getRole('admin');
+        $user->save();
+        $auth->assign($role, $user->id);
+
+
+        return $this->sendEmail($user);
     }
 
     /**

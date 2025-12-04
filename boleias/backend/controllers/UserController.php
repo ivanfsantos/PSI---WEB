@@ -2,14 +2,13 @@
 
 namespace backend\controllers;
 
+use common\models\SignupAdmin;
 use common\models\User;
 use common\models\UserSearch;
-use frontend\models\SignupForm;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
 
 /**
  * UserController implements the CRUD actions for User model.
@@ -77,8 +76,10 @@ class UserController extends Controller
      */
     public function actionSignup()
     {
-        $model = new SignupForm();
-        if ($model->load(Yii::$app->request->post()) && $model->signup()) {
+        $model = new SignupAdmin();
+
+
+        if ($model->load(Yii::$app->request->post()) && $model->signupAdmin()) {
             Yii::$app->session->setFlash('success', 'Thank you for registration. Please check your inbox for verification email.');
             return $this->goHome();
         }

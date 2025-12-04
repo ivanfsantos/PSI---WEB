@@ -5,7 +5,7 @@ use yii\helpers\Html;
 /** @var yii\web\View $this */
 /** @var common\models\Boleia $model */
 
-$this->title = 'Create Boleia';
+$this->title = 'Criar Boleia';
 $this->params['breadcrumbs'][] = ['label' => 'Boleias', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
