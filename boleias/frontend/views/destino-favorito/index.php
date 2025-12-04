@@ -10,7 +10,7 @@ use yii\grid\GridView;
 /** @var common\models\DestinoFavoritoSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Destino Favoritos';
+$this->title = 'Watchlist';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="destino-favorito-index">
@@ -20,9 +20,11 @@ $this->params['breadcrumbs'][] = $this->title;
 
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+    <div class="card p-3 mb-5 bg-white border border-5 rounded-4">
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
+        'summary' => '',
         'columns' => [
              [
                 'label' => 'Origem',
@@ -70,6 +72,6 @@ $this->params['breadcrumbs'][] = $this->title;
     ]); ?>
 
 
-
+</div>
 
 </div>

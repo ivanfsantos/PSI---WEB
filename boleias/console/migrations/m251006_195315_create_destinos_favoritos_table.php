@@ -18,6 +18,7 @@ class m251006_195315_create_destinos_favoritos_table extends Migration
         $this->createTable('{{%destinos_favoritos}}', [
             'id' => $this->primaryKey(),
             'boleia_id' => $this->integer(),
+            'perfil_id' => $this->integer(),
         ], 'ENGINE=InnoDB');
 
         // creates index for column `boleia_id`
@@ -33,6 +34,24 @@ class m251006_195315_create_destinos_favoritos_table extends Migration
             '{{%destinos_favoritos}}',
             'boleia_id',
             '{{%boleias}}',
+            'id',
+            'CASCADE'
+        );
+
+        // creates index for column `perfil_id`
+        $this->createIndex(
+            '{{%idx-destinos_favoritos-perfil_id}}',
+            '{{%destinos_favoritos}}',
+            'perfil_id'
+        );
+
+
+        // add foreign key for table `{{%perfis}}`
+        $this->addForeignKey(
+            '{{%fk-destinos_favoritos-perfil_id}}',
+            '{{%destinos_favoritos}}',
+            'perfil_id',
+            '{{%perfis}}',
             'id',
             'CASCADE'
         );
@@ -54,6 +73,17 @@ class m251006_195315_create_destinos_favoritos_table extends Migration
             '{{%idx-destinos_favoritos-boleia_id}}',
             '{{%destinos_favoritos}}'
         );
+
+        $this->dropForeignKey(
+            '{{%fk-destinos_favoritos-perfil_id}}',
+            '{{%destinos_favoritos}}'
+        );
+
+        $this->dropIndex(
+            '{{%idx-destinos_favoritos-perfil_id}}',
+            '{{%destinos_favoritos}}'
+        );
+
 
         $this->dropTable('{{%destinos_favoritos}}');
     }

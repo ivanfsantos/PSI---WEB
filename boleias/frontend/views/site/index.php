@@ -132,7 +132,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'urlCreator' => function ($action, $model, $key, $index) {
                     return Url::toRoute([$action, 'id' => $model->id]);
                 },
-                'template' => '{view} {update} {delete} {reservar}',
+                'template' => '{view} {update} {delete} {reservar} {wishlist}', // adiciona wishlist
                 'visibleButtons' => [
                     'delete' => function ($model, $key, $index) {
                         return $model->viatura->perfil->user_id == Yii::$app->user->id;
@@ -147,6 +147,9 @@ $this->params['breadcrumbs'][] = $this->title;
                     },
                     'view' => function ($model, $key, $index) {
                         return true;
+                    },
+                    'wishlist' => function ($model, $key, $index) use ($perfil) {
+                        return $perfil && !$perfil->condutor; // só mostra se perfil existe e não for condutor
                     },
                 ],
                 'buttons' => [
@@ -184,10 +187,33 @@ $this->params['breadcrumbs'][] = $this->title;
                             ['class' => 'btn btn-info btn-sm']
                         );
                     },
+                    'wishlist' => function ($url, $model, $key) {
+                        $jaExiste = count($model->destinosFavoritos) > 0;
+                        $texto = $jaExiste ? '<i class="bi bi-heart-fill"></i> Remover Wishlist' : '<i class="bi bi-heart"></i> Add Wishlist';
+                        $class = $jaExiste ? 'btn btn-danger btn-sm' : 'btn btn-warning btn-sm';
+
+                        $actionConfig = $jaExiste
+                            ? ['destino-favorito/delete', 'id' => $model->destinosFavoritos[0]->id ?? null]
+                            : ['destino-favorito/create', 'boleia_id' => $model->id];
+
+                        $data = $jaExiste
+                            ? [
+                                'method' => 'post',
+                                'confirm' => 'Tens a certeza que queres remover esta boleia da tua wishlist?',
+                            ]
+                            : [];
+
+                        if ($jaExiste && ($actionConfig['id'] === null)) {
+                            return '';
+                        }
+
+                        return Html::a($texto, $actionConfig, ['class' => $class, 'data' => $data]);
+                    },
                 ],
             ],
         ],
     ]); ?>
+
 </div>
 
 
