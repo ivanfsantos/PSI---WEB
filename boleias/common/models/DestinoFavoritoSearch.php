@@ -17,8 +17,7 @@ class DestinoFavoritoSearch extends DestinoFavorito
     public function rules()
     {
         return [
-            [['id', 'perfil_id'], 'integer'],
-            [['tipo', 'endereco'], 'safe'],
+            [['id', 'perfil_id', 'boleia_id'], 'integer'], // ✔ campos reais da BD
         ];
     }
 
@@ -27,23 +26,15 @@ class DestinoFavoritoSearch extends DestinoFavorito
      */
     public function scenarios()
     {
-        // bypass scenarios() implementation in the parent class
         return Model::scenarios();
     }
 
     /**
-     * Creates data provider instance with search query applied
-     *
-     * @param array $params
-     * @param string|null $formName Form name to be used into `->load()` method.
-     *
-     * @return ActiveDataProvider
+     * Search query
      */
     public function search($params, $formName = null)
     {
-        $query = DestinoFavorito::find();
-
-        // add conditions that should always apply here
+        $query = DestinoFavorito::find()->joinWith('boleia');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -52,19 +43,15 @@ class DestinoFavoritoSearch extends DestinoFavorito
         $this->load($params, $formName);
 
         if (!$this->validate()) {
-            // uncomment the following line if you do not want to return any records when validation fails
-            // $query->where('0=1');
             return $dataProvider;
         }
 
-        // grid filtering conditions
+        // ✔ filtros corretos
         $query->andFilterWhere([
             'id' => $this->id,
             'perfil_id' => $this->perfil_id,
+            'boleia_id' => $this->boleia_id,
         ]);
-
-        $query->andFilterWhere(['like', 'tipo', $this->tipo])
-            ->andFilterWhere(['like', 'endereco', $this->endereco]);
 
         return $dataProvider;
     }

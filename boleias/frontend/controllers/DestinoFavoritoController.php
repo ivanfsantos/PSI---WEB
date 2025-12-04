@@ -5,9 +5,13 @@ use Yii;
 use common\models\DestinoFavorito;
 use common\models\DestinoFavoritoSearch;
 use common\models\Perfil;
+use yii\base\ErrorException;
+use yii\base\Model;
+use yii\db\Exception;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+
 
 
 /**
@@ -67,47 +71,36 @@ class DestinoFavoritoController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return string|\yii\web\Response
      */
-    public function actionCreate()
+    public function actionCreate($boleia_id)
     {
-        $model = new DestinoFavorito();
 
-        if ($this->request->isPost) {
-            $perfil = Perfil::findOne(['user_id'=>\Yii::$app->user->id]);
-            $model->load($this->request->post());
+       $perfil = Perfil::findOne(['user_id'=>Yii::$app->user->id]);
 
-            $model->setAttribute('perfil_id',$perfil->id);
+       if(!$perfil)
+       {
+           throw new NotFoundHttpException('Perfil nao encontrado');
+       }
 
-            if ($model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
-            }
-        } else {
-            $model->loadDefaultValues();
-        }
+       $model = new DestinoFavorito();
 
-        return $this->render('create', [
-            'model' => $model,
-        ]);
+       $model->perfil_id = $perfil->id;
+       $model->boleia_id = $boleia_id;
+
+       $existe = DestinoFavorito::find()->where(['perfil_id'=>$model->perfil->id,
+                                                'boleia_id'=>$model->boleia_id ])->one();
+
+       if($existe){
+           return $this->redirect(Yii::$app->request->referrer);
+       }
+       if($model->save())
+       {
+           return $this->redirect(Yii::$app->request->referrer);
+       }else
+       {
+           throw new ErrorException('Nao foi possivel adicionar a viagem á wishlist');
+       }
     }
 
-    public function actionSalvar()
-    {
-        $boleia_id = Yii::$app->request->post('boleia_id');
-        $perfil = Perfil::findOne(['user_id' => Yii::$app->user->id]);
-
-        // Evitar duplicados
-        if (!DestinoFavorito::find()->where([
-            'perfil_id' => $perfil->id
-        ])->exists()) {
-
-            $favorito = new DestinoFavorito();
-            $favorito->perfil_id = $perfil->id;
-            $favorito->endereco = $boleia_id;
-            $favorito->tipo = 'destino';
-            $favorito->save();
-        }
-
-        return $this->redirect(Yii::$app->request->referrer);
-    }
 
     
 
@@ -142,7 +135,7 @@ class DestinoFavoritoController extends Controller
     {
         $this->findModel($id)->delete();
 
-        return $this->redirect(['index']);
+        return $this->redirect(Yii::$app->request->referrer);
     }
 
     /**

@@ -17,30 +17,59 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>
-        <?= Html::a('Create Destino Favorito', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
+
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-
-            'id',
-            'perfil_id',
-            'tipo',
-            'endereco',
-            [
-                'class' => ActionColumn::className(),
-                'urlCreator' => function ($action, DestinoFavorito $model, $key, $index, $column) {
-                    return Url::toRoute([$action, 'id' => $model->id]);
-                 }
+             [
+                'label' => 'Origem',
+                'value' => function ($model) {
+                    return $model->boleia ? $model->boleia->origem : '—';
+                }
             ],
+            [
+                'label' => 'Destino',
+                'value' => function ($model) {
+                    return $model->boleia ? $model->boleia->destino : '—';
+                }
+            ],
+            [
+                'label' => 'Data',
+                'value' => function ($model) {
+                    return $model->boleia ? date('d/m/Y', strtotime($model->boleia->data_hora)) : '—';
+                }
+            ],
+            [
+                'label' => 'Hora',
+                'value' => function ($model) {
+                    return $model->boleia ? date('H:i', strtotime($model->boleia->data_hora)) : '—';
+                }
+            ],
+            [
+                'label'=>'Remover',
+                'format'=>'raw',
+                'value'=>function ($model) {
+                    return Html::a(
+                        '<i class="bi bi-trash"></i> Remover',
+                        ['destino-favorito/delete', 'id' => $model->id],
+                        [
+                            'class' => 'btn btn-danger btn-sm',
+                            'data' => [
+                                'confirm' => 'Tens a certeza que queres remover esta boleia da wishlist?',
+                                'method' => 'post', //
+                            ],
+                        ]
+                    );
+                }
+
+            ]
         ],
     ]); ?>
+
+
 
 
 </div>

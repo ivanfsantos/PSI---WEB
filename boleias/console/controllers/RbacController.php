@@ -249,7 +249,7 @@ class RbacController extends Controller
         // ==== Atribuir Papéis a Utilizadores ====
 
         // Substituir pelos IDs reais dos utilizadores no banco de dados
-        $auth->assign($admin, 1);   // Admin (ID 1)
+        $auth->assign($admin, 5);   // Admin (ID 1)
 
         echo "RBAC configurado com sucesso.\n";
     }
