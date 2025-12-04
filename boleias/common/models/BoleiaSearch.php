@@ -41,7 +41,10 @@ class BoleiaSearch extends Boleia
      */
     public function search($params, $formName = null)
     {
-        $query = Boleia::find();
+        $query = Boleia::find()->joinWith(['destinosFavoritos'=>function (\Yii\db\ActiveQuery $query) {
+            $perfil = Perfil::findOne(['user_id'=>\Yii::$app->user->id]);
+            $query->on('destinos_favoritos.perfil_id = :perfil_id',[':perfil_id'=>$perfil->id]);
+        }]);
 
         // add conditions that should always apply here
 

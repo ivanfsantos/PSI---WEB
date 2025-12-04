@@ -41,6 +41,7 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                    'site/add-favorito/<id:\d+>'=> 'site/add-favorito'
             ],
         ],
     ],
