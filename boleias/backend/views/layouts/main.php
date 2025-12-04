@@ -21,7 +21,7 @@ $this->beginPage();
 
     <!-- CSS Files -->
     <link rel="stylesheet" href="htmlcodex/css/bootstrap.min.css">
-    <link rel="stylesheet" href="htmlcodex/css/style.css">
+    <link rel="stylesheet" href="web/css/site.css">
 
     <?php $this->head() ?>
 </head>
@@ -49,7 +49,7 @@ $this->beginPage();
         <div class="navbar-nav ms-auto p-4 p-lg-0">
             <a href="<?= Url::to(['/user/index']) ?>" class="nav-item nav-link">Users</a>
             <a href="<?= Url::to(['/documento/index']) ?>" class="nav-item nav-link">Docs</a>
-            <a href="<?= Url::to(['../../frontend/web/site/index']) ?>" class="nav-item nav-link">FRONTEND</a>
+            <a href="<?= Url::to(['../../frontend/web/site/index']) ?>" class="nav-item nav-link">Frontend</a>
 
 
 
@@ -61,7 +61,6 @@ $this->beginPage();
         <?= Html::endForm() ?>
         <?php endif; ?>
     </div>
-    </div>
 </nav>
 <!-- END NAVBAR -->
 
@@ -71,10 +70,8 @@ $this->beginPage();
 </main>
 <!-- END MAIN CONTENT -->
 
-<!-- FOOTER -->
-<footer class="bg-dark text-light text-center py-3 mt-5">
-    <p class="mb-0">&copy; <?= date('Y') ?> Boleias Admin</p>
-</footer>
+
+
 
 <!-- JS Files -->
 <script src="htmlcodex/js/main.js"></script>

@@ -5,7 +5,7 @@ use yii\helpers\Html;
 /** @var yii\web\View $this */
 /** @var common\models\Viatura $model */
 
-$this->title = 'Create Viatura';
+$this->title = 'Criar Viatura';
 $this->params['breadcrumbs'][] = ['label' => 'Viaturas', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>

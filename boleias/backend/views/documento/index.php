@@ -16,10 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="documento-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-
-    <p>
-        <?= Html::a('Enviar Documentos', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
+    <div class="card p-3 mb-5 bg-white border border-5 rounded-4">
 
 
     <?= GridView::widget([
@@ -28,11 +25,9 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
 
             [
-                'attribute' => 'perfil_id',
-                'value' => function ($model) {
-                    return $model->perfil ? $model->perfil->nome : '(sem nome)';
-                },
-                'label' => 'Perfil',
+                'attribute' => 'perfil_id', // Mantém o label original
+                'label' => 'Nome', // Altera o texto do label para maior clareza
+                'value' => $model->perfil->nome ?? 'Perfil não encontrado',
             ],
 
             [
@@ -51,13 +46,25 @@ $this->params['breadcrumbs'][] = $this->title;
                             ]
                         );
                     },
-
+                    'validar' => function ($url, $model, $key) {
+                        return Html::a(
+                            '<i class="bi bi-check-circle"></i> Validar',
+                            ['documento/validate', 'id' => $model->id],   // <-- confirmo que deve ser "validar", não "validate"
+                            [
+                                'class' => 'btn btn-success btn-sm',
+                                'data' => [
+                                    'method' => 'post',
+                                    'confirm' => 'Tem a certeza que deseja validar este documento?',
+                                ],
+                            ]
+                        );
+                    },
                 ],
             ],
         ],
     ]); ?>
 
 
-
+</div>
 
 </div>

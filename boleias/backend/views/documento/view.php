@@ -11,10 +11,14 @@ $this->params['breadcrumbs'][] = ['label' => 'Documentos', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 
 ?>
+
 <div class="documento-view container">
 
     <h1><?= Html::encode($this->title) ?></h1>
-
+    <p>
+        <?= Html::a('Validar', ['documento/validate', 'id' => $model->id], ['class' => 'btn btn-success']) ?>
+    </p>
+    <br>
     <div class="mb-3">
         <strong>Estado:</strong>
         <?php if ($model->valido): ?>
@@ -23,6 +27,8 @@ $this->params['breadcrumbs'][] = $this->title;
             <span class="badge bg-warning text-dark">Pendente</span>
         <?php endif; ?>
     </div>
+
+
 
     <div class="row">
 
@@ -35,12 +41,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="card-body text-center">
 
                     <?php if ($model->carta_conducao): ?>
-                        <img src="<?= 'uploads/'. $model->carta_conducao ?>"
+                        <img src="<?= '../../frontend/web/uploads/'.$model->carta_conducao ?>"
                              alt="Carta de Condução"
                              class="img-fluid rounded"
                              style="max-height: 350px; border: 1px solid #ddd;">
-
-
                     <?php else: ?>
                         <p class="text-muted">Nenhuma imagem enviada.</p>
                     <?php endif; ?>
@@ -58,7 +62,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="card-body text-center">
 
                     <?php if ($model->cartao_cidadao): ?>
-                        <img src="<?= 'uploads/'. $model->cartao_cidadao ?>"
+                        <img src="<?= '../../frontend/web/uploads/'.$model->cartao_cidadao ?>"
                              alt="Cartão de Cidadão"
                              class="img-fluid rounded"
                              style="max-height: 350px; border: 1px solid #ddd;">
@@ -81,7 +85,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => 'Nome',
                 'value' => $model->perfil->nome ?? 'Perfil não encontrado',
             ],
-
             [
                 'attribute' => 'valido',
                 'value' => $model->valido ? 'Validado' : 'Pendente',

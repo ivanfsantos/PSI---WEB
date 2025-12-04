@@ -6,6 +6,7 @@
 
 use yii\bootstrap5\ActiveForm;
 use yii\bootstrap5\Html;
+use yii\helpers\Url;
 
 $this->title = 'Login';
 ?>
@@ -26,6 +27,14 @@ $this->title = 'Login';
             <div class="form-group">
                 <?= Html::submitButton('Login', ['class' => 'btn btn-primary btn-block', 'name' => 'login-button']) ?>
             </div>
+        <br>
+
+        <div class="form-group">
+            <p> 
+                <a href="<?= Url::to(['../../frontend/web/site/index']) ?>" class="btn btn-primary">Frontend</a>
+
+            </p>
+        </div>
 
         <?php ActiveForm::end(); ?>
     </div>

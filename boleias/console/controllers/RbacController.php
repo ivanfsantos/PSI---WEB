@@ -251,6 +251,7 @@ class RbacController extends Controller
         // Substituir pelos IDs reais dos utilizadores no banco de dados
         $auth->assign($admin, 1);   // Admin (ID 1)
 
+
         echo "RBAC configurado com sucesso.\n";
     }
 }

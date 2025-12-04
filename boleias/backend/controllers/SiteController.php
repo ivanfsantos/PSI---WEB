@@ -2,10 +2,14 @@
 
 namespace backend\controllers;
 
+use app\models\User;
+use common\models\Documento;
 use common\models\LoginForm;
+use common\models\SignupAdmin;
+use common\models\UserSearch;
 use Yii;
-use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\Response;
 
@@ -60,7 +64,29 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index');
+        $qtdDocumentosPendentes = Documento::find()->where(['valido' => 0])->count();
+
+        $searchModel = new UserSearch();
+        $dataProvider = $searchModel->search($this->request->queryParams);
+        $qtdUsersRegisto = $dataProvider->query->count();
+
+        return $this->render('index', [
+            'qtdDocumentosPendentes' => $qtdDocumentosPendentes,
+            'qtdUsersRegisto' => $qtdUsersRegisto,
+        ]);
+    }
+
+    public function actionSignup()
+    {
+        $model = new SignupAdmin();
+        if ($model->load(Yii::$app->request->post()) && $model->signupAdmin()) {
+            Yii::$app->session->setFlash('success', 'Thank you for registration. Please check your inbox for verification email.');
+            return $this->goHome();
+        }
+
+        return $this->render('signup', [
+            'model' => $model,
+        ]);
     }
 
     /**
