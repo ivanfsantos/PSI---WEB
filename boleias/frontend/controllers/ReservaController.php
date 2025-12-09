@@ -3,6 +3,7 @@
 namespace frontend\controllers;
 
 use common\models\Boleia;
+use common\models\CondutorFavorito;
 use common\models\Perfil;
 use common\models\Reserva;
 use common\models\ReservaSearch;
@@ -144,10 +145,31 @@ class ReservaController extends Controller
             $model->loadDefaultValues();
         }
 
+
+        $idPerfilCondutor = (int)$model->boleia->viatura->perfil_id;
+
+        $condutor = Perfil::findOne(['id'=>$idPerfilCondutor]);
+
+        $idPerfilPassageiro = $perfilId->id;
+
+        $fav = CondutorFavorito::findOne(['passageiro_id'=>$idPerfilPassageiro,
+                'condutor_id'=>$idPerfilCondutor]);
+
+
+        $texto = $fav ? 'Remover dos favoritos' : 'Adicionar aos favoritos';
+        $btn_class = $fav ? 'btn btn-danger btn-sm ' : 'btn btn-success btn-sm ';
+
+        $rotaConfig = $fav ? ['condutor-favorito/delete','id'=>$fav->id] :
+            ['condutor-favorito/create','condutorId'=>$idPerfilCondutor];
+
         return $this->render('create', [
             'model' => $model,
-            'perfil_id' => $perfil->id,
+            'perfil_id' => $perfil,
             'boleia_id' => $id,
+            'condutor' => $condutor,
+            'texto_condutor'=>$texto,
+            'rotaConfig'=>$rotaConfig,
+            'btn_class'=>$btn_class,
         ]);
     }
 

@@ -17,6 +17,10 @@ $this->params['breadcrumbs'][] = $this->title;
         'model' => $model,
         'perfil_id' => $perfil_id,
         'boleia_id' => $boleia_id,
+        'texto_condutor'=>$texto_condutor,
+        'condutor' => $condutor,
+        'rotaConfig'=>$rotaConfig,
+        'btn_class'=>$btn_class,
 
     ]) ?>
 
