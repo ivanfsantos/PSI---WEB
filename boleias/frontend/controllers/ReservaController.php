@@ -3,6 +3,7 @@
 namespace frontend\controllers;
 
 use common\models\Boleia;
+use common\models\CondutorFavorito;
 use common\models\Perfil;
 use common\models\Reserva;
 use common\models\ReservaSearch;
@@ -104,7 +105,7 @@ class ReservaController extends Controller
 
 
         $model->estado = 'Pendente';
-        $model->perfil_id = $perfilId;
+        $model->perfil_id = $perfilId->id;
         $model->boleia_id = $id;
 
         $viatura = $model->boleia->viatura;
@@ -115,23 +116,44 @@ class ReservaController extends Controller
             return $this->redirect(['index']);
         }
 
-            if ($this->request->isPost) {
-                if ($model->load($this->request->post()) && $model->save()) {
+        if ($this->request->isPost) {
+            if ($model->load($this->request->post()) && $model->save()) {
 
-                    $viatura->lugares_disponiveis--;
-                    $viatura->save();
+                $viatura->lugares_disponiveis--;
+                $viatura->save();
 
-                    return $this->redirect(['view', 'id' => $model->id]);
-                }
-            } else {
-                $model->loadDefaultValues();
+                return $this->redirect(['view', 'id' => $model->id]);
             }
+        } else {
+            $model->loadDefaultValues();
+        }
 
-            return $this->render('create', [
-                'model' => $model,
-                'perfil_id' => $perfilId,
-                'boleia_id' => $id,
-            ]);
+
+        $idPerfilCondutor = (int)$model->boleia->viatura->perfil_id;
+
+        $condutor = Perfil::findOne(['id'=>$idPerfilCondutor]);
+
+        $idPerfilPassageiro = $perfilId->id;
+
+        $fav = CondutorFavorito::findOne(['passageiro_id'=>$idPerfilPassageiro,
+                'condutor_id'=>$idPerfilCondutor]);
+
+
+        $texto = $fav ? 'Remover dos favoritos' : 'Adicionar aos favoritos';
+        $btn_class = $fav ? 'btn btn-danger btn-sm ' : 'btn btn-success btn-sm ';
+
+        $rotaConfig = $fav ? ['condutor-favorito/delete','id'=>$fav->id] :
+            ['condutor-favorito/create','condutorId'=>$idPerfilCondutor];
+
+        return $this->render('create', [
+            'model' => $model,
+            'perfil_id' => $perfilId,
+            'boleia_id' => $id,
+            'condutor' => $condutor,
+            'texto_condutor'=>$texto,
+            'rotaConfig'=>$rotaConfig,
+            'btn_class'=>$btn_class,
+        ]);
     }
 
     /**
