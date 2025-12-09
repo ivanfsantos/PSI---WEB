@@ -138,4 +138,10 @@ class Perfil extends \yii\db\ActiveRecord
         return $this->hasMany(Viatura::class, ['perfil_id' => 'id']);
     }
 
+    public function temFavorito($boleia_id)
+    {
+       return DestinoFavorito::find()->where(['perfil_id'=>$this->id,
+                                            'boleia_id' => $boleia_id])->exists();
+    }
+
 }

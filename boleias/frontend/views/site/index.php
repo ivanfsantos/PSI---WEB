@@ -14,6 +14,78 @@ $this->title = 'Boleias';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 
+
+    <?php
+    use common\models\Perfil;
+    $perfil = Perfil::findOne(['user_id' => Yii::$app->user->id]);
+
+    $buttons = [
+        'delete' => function ($url, $model, $key) {
+            return Html::a(
+                '<i class="bi bi-trash"></i> Remover',
+                ['site/delete', 'id' => $model->id],
+                [
+                    'class' => 'btn btn-danger btn-sm',
+                    'data' => [
+                        'confirm' => 'Tem a certeza que deseja remover esta boleia?',
+                        'method' => 'post',
+                    ],
+                ]
+            );
+        },
+
+        'update' => function ($url, $model, $key) {
+            return Html::a(
+                '<i class="bi bi-pencil"></i> Editar',
+                ['site/update', 'id' => $model->id],
+                ['class' => 'btn btn-warning btn-sm']
+            );
+        },
+
+        'reservar' => function ($url, $model, $key) {
+            return Html::a(
+                '<i class="bi bi-archive"></i> Reservar',
+                ['reserva/create', 'id' => $model->id],
+                ['class' => 'btn btn-primary btn-sm']
+            );
+        },
+
+        'view' => function ($url, $model, $key) {
+            return Html::a(
+                '<i class="bi bi-eye"></i> Ver',
+                ['site/view', 'id' => $model->id],
+                ['class' => 'btn btn-info btn-sm']
+            );
+        },
+
+    ];
+    if($perfil && !$perfil->condutor){
+        $buttons['wishlist'] = function ($url, $model, $key) {
+            $jaExiste = count($model->destinosFavoritos);
+            $texto = $jaExiste ? '<i class="bi bi-eye"></i> Remover WishList' : '<i class="bi bi-eye"></i> WishList';
+            $class = $jaExiste ? 'btn btn-danger btn-sm' : 'btn btn-warning btn-sm';
+            $actionconfig = $jaExiste ? ['destino-favorito/delete', 'id' => $model->destinosFavoritos[0]->id] : ['destino-favorito/create', 'boleia_id' => $model->id];
+            $data = $jaExiste
+                ? [
+                    'method' => 'post',
+                    'confirm' => 'Tens a certeza que queres remover esta boleia da tua wishlist?',
+                ]
+                : [];
+
+            return Html::a(
+                $texto,
+                $actionconfig,
+                ['class' => $class,
+                    'data' =>$data]
+
+
+            );
+        };
+    }
+    ?>
+
+
+
 <div class="site-index">
     <div class="p-5 mb-4 bg-transparent rounded-3">
         <div class="container-fluid py-5 text-center">
@@ -60,7 +132,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'urlCreator' => function ($action, $model, $key, $index) {
                     return Url::toRoute([$action, 'id' => $model->id]);
                 },
-                'template' => '{view} {update} {delete} {reservar}',
+                'template' => '{view} {update} {delete} {reservar} {wishlist}', // adiciona wishlist
                 'visibleButtons' => [
                     'delete' => function ($model, $key, $index) {
                         return $model->viatura->perfil->user_id == Yii::$app->user->id;
@@ -75,6 +147,9 @@ $this->params['breadcrumbs'][] = $this->title;
                     },
                     'view' => function ($model, $key, $index) {
                         return true;
+                    },
+                    'wishlist' => function ($model, $key, $index) use ($perfil) {
+                        return $perfil && !$perfil->condutor; // só mostra se perfil existe e não for condutor
                     },
                 ],
                 'buttons' => [
@@ -112,10 +187,33 @@ $this->params['breadcrumbs'][] = $this->title;
                             ['class' => 'btn btn-info btn-sm']
                         );
                     },
+                    'wishlist' => function ($url, $model, $key) {
+                        $jaExiste = count($model->destinosFavoritos) > 0;
+                        $texto = $jaExiste ? '<i class="bi bi-heart-fill"></i> Remover Wishlist' : '<i class="bi bi-heart"></i> Add Wishlist';
+                        $class = $jaExiste ? 'btn btn-danger btn-sm' : 'btn btn-warning btn-sm';
+
+                        $actionConfig = $jaExiste
+                            ? ['destino-favorito/delete', 'id' => $model->destinosFavoritos[0]->id ?? null]
+                            : ['destino-favorito/create', 'boleia_id' => $model->id];
+
+                        $data = $jaExiste
+                            ? [
+                                'method' => 'post',
+                                'confirm' => 'Tens a certeza que queres remover esta boleia da tua wishlist?',
+                            ]
+                            : [];
+
+                        if ($jaExiste && ($actionConfig['id'] === null)) {
+                            return '';
+                        }
+
+                        return Html::a($texto, $actionConfig, ['class' => $class, 'data' => $data]);
+                    },
                 ],
             ],
         ],
     ]); ?>
-</div>
 
 </div>
+
+

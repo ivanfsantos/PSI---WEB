@@ -18,10 +18,11 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Create User', ['user/signup'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Create Admin', ['user/signup'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+    <div class="card p-3 mb-5 bg-white border border-5 rounded-4">
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -74,6 +75,6 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ],
     ]); ?>
-
+    </div>
 
 </div>

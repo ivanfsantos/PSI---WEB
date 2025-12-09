@@ -18,30 +18,46 @@ $this->params['breadcrumbs'][] = $this->title;
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Create Documento', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Enviar Documentos', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
+        'summary' => '',
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
-            'carta_conducao',
-            'cartao_cidadao',
-            'valido',
-            'perfil_id',
             [
-                'class' => ActionColumn::className(),
+                'attribute' => 'perfil_id',
+                'value' => function ($model) {
+                    return $model->perfil ? $model->perfil->nome : '(sem nome)';
+                },
+                'label' => 'Perfil',
+            ],
+
+            [
+                'class' => ActionColumn::class,
+                'template' => '{ver} {validar}',   // <-- CORRIGIDO AQUI
                 'urlCreator' => function ($action, Documento $model, $key, $index, $column) {
                     return Url::toRoute([$action, 'id' => $model->id]);
-                 }
+                },
+                'buttons' => [
+                    'ver' => function ($url, $model, $key) {
+                        return Html::a(
+                            '<i class="bi bi-eye"></i> Ver Documentos',
+                            ['documento/view', 'id' => $model->id],
+                            [
+                                'class' => 'btn btn-info btn-sm',
+                            ]
+                        );
+                    },
+
+                ],
             ],
         ],
     ]); ?>
+
+
 
 
 </div>

@@ -70,7 +70,6 @@ class PerfilController extends Controller
      */
     public function actionCreate()
     {
-        // se não estiver autenticado
         if (Yii::$app->user->isGuest) {
             return $this->goHome();
         }

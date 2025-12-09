@@ -8,6 +8,7 @@ use common\models\Perfil;
 use common\models\UploadDocumentoCarta;
 use common\models\UploadDocumentoCartao;
 use frontend\models\DocumentoSearch;
+use Yii;
 use yii\filters\AccessControl;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
@@ -58,7 +59,11 @@ class DocumentoController extends Controller
     public function actionIndex()
     {
         $searchModel = new DocumentoSearch();
+        $userId = Yii::$app->user->id;
+        $perfilId = Perfil::findOne(['user_id' => $userId]);
         $dataProvider = $searchModel->search($this->request->queryParams);
+
+        $dataProvider->query->andWhere(['perfil_id' => $perfilId]);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -125,7 +130,7 @@ class DocumentoController extends Controller
 
 
             $cartaFileName = $modelUploadCarta->upload($userId . '-carta-conducao');
-            $cartaoFileName = $modelUploadCartao->upload($userId . '-cartao-conducao');
+            $cartaoFileName = $modelUploadCartao->upload($userId . '-cartao-cidadao');
 
             //criar uma variavel com os dados do documento
             //fazer um setAtributes

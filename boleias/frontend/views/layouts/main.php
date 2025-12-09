@@ -4,6 +4,7 @@
 
 use yii\helpers\Html;
 use yii\helpers\Url;
+use yii\bootstrap5\Alert;
 
 $this->beginPage();
 ?>
@@ -20,9 +21,9 @@ $this->beginPage();
     <!-- Favicon -->
     <link href="htmlcodex/img/favicon.ico" rel="icon">
 
-    <!-- CSS Files -->
+
     <link rel="stylesheet" href="htmlcodex/css/bootstrap.min.css">
-    <link rel="stylesheet" href="htmlcodex/css/style.css">
+    <link rel="stylesheet" href="web/css/site.css">
 
     <?php $this->head() ?>
 </head>
@@ -50,8 +51,7 @@ $this->beginPage();
         <div class="navbar-nav ms-auto p-4 p-lg-0">
             <a href="<?= Url::to(['/perfil/index','id' => Yii::$app->user->id]) ?>" class="nav-item nav-link">Perfil</a>
             <a href="<?= Url::to(['/reserva/index','id' => Yii::$app->user->id]) ?>" class="nav-item nav-link">Reservas</a>
-            <a href="<?= Url::to(['/reserva/index','id' => Yii::$app->user->id]) ?>" class="nav-item nav-link">Watchlist</a>
-            <a href="<?= Url::to(['/reserva/index','id' => Yii::$app->user->id]) ?>" class="nav-item nav-link">Favoritos</a>
+            <a href="<?= Url::to(['/destino-favorito/index','id' => Yii::$app->user->id]) ?>" class="nav-item nav-link">Watchlist</a>
 
             <?php if (\Yii::$app->user->can('acederBackend')) { ?>
               <a href="<?= Url::to(['../../backend/web/site/login']) ?>" class="nav-item nav-link">Backend</a>
@@ -65,20 +65,28 @@ $this->beginPage();
                 <?= Html::endForm() ?>
             <?php endif; ?>
         </div>
-    </div>
 </nav>
-<!-- END NAVBAR -->
 
-<!-- MAIN CONTENT -->
 <main class="container py-4">
+    <?php
+    foreach (Yii::$app->session->getAllFlashes() as $type => $message) {
+        $color = ($type == 'error' || $type == 'danger') ? '#a94442' : '#3c763d';
+        $bgColor = ($type == 'error' || $type == 'danger') ? '#f2dede' : '#dff0d8';
+        $border = ($type == 'error' || $type == 'danger') ? '#ebccd1' : '#d0e9c6';
+
+        echo '<div style="padding: 15px; margin-bottom: 20px; border: 1px solid ' . $border . '; border-radius: 4px; color: ' . $color . '; background-color: ' . $bgColor . ';">';
+        echo Html::encode($message);
+        echo '</div>';
+    }
+    // Opcional: remover todos os flashes para garantir que não aparecem novamente
+    Yii::$app->session->removeAllFlashes();
+    ?>
+
+
     <?= $content ?>
 </main>
-<!-- END MAIN CONTENT -->
 
-<!-- FOOTER -->
-<footer class="bg-dark text-light text-center py-3 mt-5">
-    <p class="mb-0">&copy; <?= date('Y') ?> Boleias - All Rights Reserved</p>
-</footer>
+
 
 <!-- JS Files -->
 <script src="htmlcodex/js/main.js"></script>

@@ -89,6 +89,7 @@ class ViaturaController extends Controller
         $model = new Viatura();
         $model->perfil_id = $id;
 
+
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
                 return $this->redirect(['view', 'id' => $model->id]);

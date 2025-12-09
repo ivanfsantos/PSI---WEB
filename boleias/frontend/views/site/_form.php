@@ -21,7 +21,8 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'viatura_id')->dropDownList(
         ArrayHelper::map($viaturas, 'id', 'modelo'),
-        ['prompt' => 'Selecione uma viatura']); ?>
+        ['prompt' => 'Selecione uma viatura']
+)->label('Viaturas');?>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

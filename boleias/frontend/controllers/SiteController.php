@@ -4,22 +4,31 @@ namespace frontend\controllers;
 
 use common\models\Boleia;
 use common\models\BoleiaSearch;
+
+use common\models\DestinoFavorito;
+use common\models\DestinoFavoritoSearch;
+use common\models\Documento;
+use common\models\LoginForm;
 use common\models\Perfil;
+
+
 use common\models\Reserva;
 use common\models\Viatura;
+
+use frontend\models\ContactForm;
+use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResendVerificationEmailForm;
+use frontend\models\ResetPasswordForm;
+use frontend\models\SignupForm;
 use frontend\models\VerifyEmailForm;
 use Yii;
 use yii\base\InvalidArgumentException;
+use yii\helpers\ArrayHelper;
+use yii\helpers\Html;
+use yii\filters\AccessControl;
+use yii\filters\VerbFilter;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
-use yii\filters\VerbFilter;
-use yii\filters\AccessControl;
-use common\models\LoginForm;
-use frontend\models\PasswordResetRequestForm;
-use frontend\models\ResetPasswordForm;
-use frontend\models\SignupForm;
-use frontend\models\ContactForm;
 use yii\web\NotFoundHttpException;
 
 /**
@@ -36,7 +45,7 @@ class SiteController extends Controller
             'access' => [
 
                 'class' => AccessControl::class,
-                'only' => ['logout', 'signup','index','create'],
+                'only' => ['logout', 'signup','create'],
                 'rules' => [
                     [
                         'actions' => ['signup'],
@@ -48,11 +57,7 @@ class SiteController extends Controller
                         'allow' => true,
                         'roles' => ['@'],
                     ],
-                    [
-                        'actions' => ['index'],
-                        'allow' => true,
-                        'roles' => ['acederBoleia'],
-                    ],
+
                     [
                         'actions' => ['create'],
                         'allow' => true,
@@ -94,16 +99,34 @@ class SiteController extends Controller
     {
         if(!Yii::$app->user->isGuest){
 
+            $perfil = Perfil::findOne(['user_id' => Yii::$app->user->id]);
+
             $searchModel = new BoleiaSearch();
             $dataProvider = $searchModel->search($this->request->queryParams);
 
             return $this->render('index', [
                 'searchModel' => $searchModel,
                 'dataProvider' => $dataProvider,
-
+                'perfil' => $perfil,
             ]);
-        }else
+
+        } else {
             return $this->redirect(['site/login']);
+        }
+    }
+
+    public function actionAddFavorito($id)
+    {
+        $perfil = Perfil::findOne(['user_id'=>Yii::$app->user->id]);
+        $favorito = DestinoFavorito::findOne(['boleia_id'=>$id,
+            'perfil_id'=>$perfil->id]);
+
+        // TODO: Se já existir um favorito, redireciono de volta para boleias
+        // TODO: Se não existir nos favoritos, adiciono em DestinoFavorito e depois redireciono para lista de boleias
+        // TODO: Depois que o inserir boleias estiver pronto, criar uma nova lista na view de boleias, apenas com os favoritos
+
+
+
     }
 
 
@@ -117,26 +140,54 @@ class SiteController extends Controller
     public function actionCreate()
     {
         $model = new Boleia();
+
         $perfil = Perfil::findOne(['user_id' => Yii::$app->user->id]);
 
-        $perfilId = $perfil->id;
+        if (!$perfil) {
+            Yii::$app->session->setFlash('error', 'O seu perfil não foi encontrado.');
+            return $this->redirect(['site/index']);
+        }
 
         $viaturasUser = Viatura::find()->where(['perfil_id' => $perfil->id])->all();
 
+        $existeDocumentoValido = Documento::find()
+            ->where(['perfil_id' => $perfil->id, 'valido' => 1])
+            ->exists();
 
+        if ($existeDocumentoValido) {
 
-        if ($this->request->isPost) {
-            if ($model->load($this->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+            if ($this->request->isPost) {
+
+                if ($model->load($this->request->post())) {
+
+                    $boleiaExistente = Boleia::find()
+                        ->where(['viatura_id' => $model->viatura_id])
+                        ->exists();
+
+                    if ($boleiaExistente) {
+                        Yii::$app->session->setFlash('error', 'Esta viatura já possui uma boleia ativa. Cada carro só pode ter uma boleia.');
+                        return $this->redirect(['site/index']);
+                    }
+
+                    if ($model->save()) {
+                        Yii::$app->session->setFlash('success', 'Boleia criada com sucesso!');
+                        return $this->redirect(['view', 'id' => $model->id]);
+                    }
+                }
             }
+
         } else {
-            $model->loadDefaultValues();
+
+            Yii::$app->session->setFlash('error', 'É necessário ter pelo menos um documento válido para criar uma boleia.');
+            return $this->redirect(['documento/index', 'id' => $perfil->user->id]);
         }
+
 
         return $this->render('create', [
             'model' => $model,
             'viaturas' => $viaturasUser,
         ]);
+
     }
 
 
@@ -231,44 +282,6 @@ class SiteController extends Controller
         return $this->goHome();
     }
 
-    /**
-     * Displays contact page.
-     *
-     * @return mixed
-     */
-    public function actionContact()
-    {
-        $model = new ContactForm();
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            if ($model->sendEmail(Yii::$app->params['adminEmail'])) {
-                Yii::$app->session->setFlash('success', 'Thank you for contacting us. We will respond to you as soon as possible.');
-            } else {
-                Yii::$app->session->setFlash('error', 'There was an error sending your message.');
-            }
-
-            return $this->refresh();
-        }
-
-        return $this->render('contact', [
-            'model' => $model,
-        ]);
-    }
-
-    /**
-     * Displays about page.
-     *
-     * @return mixed
-     */
-    public function actionAbout()
-    {
-        return $this->render('about');
-    }
-
-    /**
-     * Signs user up.
-     *
-     * @return mixed
-     */
     public function actionSignup()
     {
         $model = new SignupForm();

@@ -18,9 +18,11 @@ class UploadDocumentoCarta extends Model
     public function upload($fileName)
     {
         if ($this->validate()) {
-            $newFile = 'uploads/' . $fileName . '.' . $this->cartaFile->extension;
-            $this->cartaFile->saveAs($newFile);
-            return $newFile;
+            $path = \Yii::getAlias('@frontend/web/uploads/') . $fileName . '.' . $this->cartaFile->extension;
+
+            $this->cartaFile->saveAs($path);
+
+            return $fileName . '.' . $this->cartaFile->extension;
         }
         return false;
     }

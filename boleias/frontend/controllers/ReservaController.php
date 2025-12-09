@@ -61,20 +61,23 @@ class ReservaController extends Controller
         $perfil = Perfil::findOne(['user_id' => $id]);
 
         if (!$perfil) {
-            throw new \yii\web\NotFoundHttpException('Perfil não encontrado.');
+            Yii::$app->session->setFlash('error', 'É preciso criar um perfil antes de aceder às reservas.');
+            return $this->redirect(['/site/index']);
+
         }
+
 
         $searchModel = new ReservaSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
 
         $dataProvider->query->andWhere(['perfil_id' => $perfil->id]);
 
-
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
     }
+
 
     /**
      * Displays a single Reserva model.
@@ -99,21 +102,34 @@ class ReservaController extends Controller
 
         $model = new Reserva();
         $userId = Yii::$app->user->identity->id;
+        $perfil = Perfil::findOne(['user_id' => $userId]);
 
-        $perfilId = Perfil::findOne(['user_id' => $userId]);
+        if (!$perfil) {
+            Yii::$app->session->setFlash('error', 'Por favor, complete o seu perfil primeiro.');
+            return $this->redirect(['perfil/create']);
+        }
 
+
+        $hasExistingReservation = Reserva::find()
+            ->where(['boleia_id' => $id])
+            ->andWhere(['perfil_id' => $perfil->id])
+            ->exists();
+
+        if ($hasExistingReservation) {
+            Yii::$app->session->setFlash('error', 'Já efetuou esta reserva para esta boleia.');
+            return $this->redirect(['reserva/index', 'id'=> $userId]);
+        }
 
 
         $model->estado = 'Pendente';
-        $model->perfil_id = $perfilId->id;
+        $model->perfil_id = $perfil->id;
         $model->boleia_id = $id;
 
         $viatura = $model->boleia->viatura;
 
-
         if ($viatura->lugares_disponiveis <= 0) {
-            Yii::$app->session->setFlash('error', 'Não há lugares disponíveis!');
-            return $this->redirect(['index']);
+            Yii::$app->session->setFlash('error', 'Não há lugares disponíveis na viatura!');
+            return $this->redirect(['index']); // Redirect back to trip listings
         }
 
         if ($this->request->isPost) {
@@ -122,6 +138,7 @@ class ReservaController extends Controller
                 $viatura->lugares_disponiveis--;
                 $viatura->save();
 
+                Yii::$app->session->setFlash('success', 'Reserva efetuada com sucesso!');
                 return $this->redirect(['view', 'id' => $model->id]);
             }
         } else {
@@ -147,7 +164,7 @@ class ReservaController extends Controller
 
         return $this->render('create', [
             'model' => $model,
-            'perfil_id' => $perfilId,
+            'perfil_id' => $perfil,
             'boleia_id' => $id,
             'condutor' => $condutor,
             'texto_condutor'=>$texto,
