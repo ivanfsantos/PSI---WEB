@@ -132,9 +132,11 @@ class ViaturaController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $viatura = $this->findModel($id);
+        $perfilId = $viatura->perfil_id; // pega o perfil da viatura
+        $viatura->delete();
 
-        return $this->redirect(['index']);
+        return $this->redirect(['index', 'id' => $perfilId]);
     }
 
     /**

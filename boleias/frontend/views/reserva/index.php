@@ -25,7 +25,6 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'summary' => '',
         'columns' => [
-            'estado',
             [
                 'label' => 'Origem',
                 'value' => function($model) {
@@ -44,19 +43,28 @@ $this->params['breadcrumbs'][] = $this->title;
                     return $model->boleia ? $model->boleia->data_hora : '(sem horario)';
                 }
             ],
+            'ponto_encontro',
+            'contacto',
+            'reembolso',
 
-            // ✔ CUSTOM ACTION COLUMN HERE
             [
                 'class' => 'yii\grid\ActionColumn',
                 'template' => '{cancel}',
                 'buttons' => [
                     'cancel' => function ($url, $model) {
+                        if ($model->estado === 'Pago') {
+                            return Html::tag('span', 'Reserva Validada', [
+                                'class' => 'btn btn-secondary btn-sm disabled'
+                            ]);
+                        }
+
                         return Html::a(
                             'Cancelar',
                             ['reserva/delete', 'id' => $model->id],
                             [
                                 'class' => 'btn btn-danger btn-sm',
                                 'data-method' => 'post',
+                                'data-confirm' => 'Tem certeza que deseja cancelar esta reserva?',
                             ]
                         );
                     }

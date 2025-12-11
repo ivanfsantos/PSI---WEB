@@ -25,9 +25,10 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
 
             [
-                'attribute' => 'perfil_id', // Mantém o label original
-                'label' => 'Nome', // Altera o texto do label para maior clareza
-                'value' => $model->perfil->nome ?? 'Perfil não encontrado',
+                'label' => '#', // coluna de numeração
+                'value' => function($model, $key, $index, $column) {
+                    return $index + 1; // $index começa em 0, então somamos 1
+                },
             ],
 
             [

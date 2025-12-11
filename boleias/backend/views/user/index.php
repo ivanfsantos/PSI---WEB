@@ -30,17 +30,10 @@ $this->params['breadcrumbs'][] = $this->title;
         'summary' => '', // Add this line to hide the summary text
         'columns' => [
             'username',
-
-            //'email:email',
-            //'status',
-            //'created_at',
-            //'updated_at',
-            //'verification_token',
             [
                 'class' => ActionColumn::className(),
-                'template' => '{view} {update} {delete}', // Explicitly define standard buttons
+                'template' => '{view} {update} {toggle-status}',
                 'urlCreator' => function ($action, User $model, $key, $index, $column) {
-                    // Ensures the URL points correctly to the User controller actions
                     return Url::toRoute([$action, 'id' => $model->id]);
                 },
                 'buttons' => [
@@ -58,23 +51,37 @@ $this->params['breadcrumbs'][] = $this->title;
                             ['class' => 'btn btn-warning btn-sm']
                         );
                     },
-                    'delete' => function ($url, $model, $key) {
-                        return Html::a(
-                            '<i class="bi bi-trash"></i> Remover',
-                            $url,
-                            [
-                                'class' => 'btn btn-danger btn-sm',
-                                'data' => [
-                                    'confirm' => 'Tem a certeza que deseja remover este utilizador?',
-                                    'method' => 'post',
-                                ],
-                            ]
-                        );
+                    'toggle-status' => function ($url, $model, $key) {
+                        if ($model->status == 9) {
+                            // Reativar
+                            return Html::a(
+                                '<i class="bi bi-check-circle"></i> Reativar',
+                                ['reactivate', 'id' => $model->id],
+                                [
+                                    'class' => 'btn btn-success btn-sm',
+                                    'data' => [
+                                        'confirm' => 'Tem a certeza que deseja reativar este utilizador?',
+                                        'method' => 'post',
+                                    ],
+                                ]
+                            );
+                        } else {
+                            // Desativar
+                            return Html::a(
+                                '<i class="bi bi-slash-circle"></i> Desativar',
+                                ['deactivate', 'id' => $model->id],
+                                [
+                                    'class' => 'btn btn-danger btn-sm',
+                                    'data' => [
+                                        'confirm' => 'Tem a certeza que deseja desativar este utilizador?',
+                                        'method' => 'post',
+                                    ],
+                                ]
+                            );
+                        }
                     },
                 ],
             ],
         ],
     ]); ?>
     </div>
-
-</div>

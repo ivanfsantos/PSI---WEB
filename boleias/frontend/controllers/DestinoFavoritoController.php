@@ -44,8 +44,18 @@ class DestinoFavoritoController extends Controller
      */
     public function actionIndex()
     {
+        $perfil = Perfil::findOne(['user_id' => Yii::$app->user->id]);
+        if (!$perfil) {
+            throw new NotFoundHttpException('Perfil não encontrado.');
+        }
+
         $searchModel = new DestinoFavoritoSearch();
-        $dataProvider = $searchModel->search($this->request->queryParams);
+
+        // Aqui filtramos pelo perfil do usuário logado
+        $dataProvider = $searchModel->search(array_merge(
+            Yii::$app->request->queryParams,
+            ['DestinoFavoritoSearch' => ['perfil_id' => $perfil->id]]
+        ));
 
         return $this->render('index', [
             'searchModel' => $searchModel,

@@ -36,10 +36,11 @@ class Boleia extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['origem', 'destino', 'data_hora', 'viatura_id'], 'required'],
+            [['origem', 'destino', 'data_hora', 'lugares_disponiveis', 'viatura_id'], 'required'],
             [['data_hora'], 'safe'],
-            [['viatura_id'], 'integer'],
+            [['viatura_id','lugares_disponiveis'], 'integer'],
             [['origem', 'destino'], 'string', 'max' => 255],
+            [['preco'], 'number'],
             [['viatura_id'], 'exist', 'skipOnError' => true, 'targetClass' => Viatura::class, 'targetAttribute' => ['viatura_id' => 'id']],
         ];
     }
@@ -54,6 +55,7 @@ class Boleia extends \yii\db\ActiveRecord
             'origem' => 'Origem',
             'destino' => 'Destino',
             'data_hora' => 'Data Hora',
+            'lugares_disponiveis' => 'Lugares Disponiveis',
             'viatura_id' => 'Viatura ID',
         ];
     }
@@ -96,6 +98,13 @@ class Boleia extends \yii\db\ActiveRecord
     public function getViatura()
     {
         return $this->hasOne(Viatura::class, ['id' => 'viatura_id']);
+
+
+    }
+
+    public function isFechada()
+    {
+        return $this->getReservas()->andWhere(['estado' => 'pago'])->exists();
     }
 
 }

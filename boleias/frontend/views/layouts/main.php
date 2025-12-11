@@ -47,11 +47,15 @@ $this->beginPage();
                 <?= Html::beginForm(['/site/logout'], 'post', ['class' => 'd-inline']) ?>
 
     <div class="collapse navbar-collapse" id="navbarCollapse">
-
         <div class="navbar-nav ms-auto p-4 p-lg-0">
             <a href="<?= Url::to(['/perfil/index','id' => Yii::$app->user->id]) ?>" class="nav-item nav-link">Perfil</a>
+
+            <?php $perfil = \common\models\Perfil::findOne(['user_id' => Yii::$app->user->id]);
+            if ($perfil && !$perfil->condutor) {
+                ?>
             <a href="<?= Url::to(['/reserva/index','id' => Yii::$app->user->id]) ?>" class="nav-item nav-link">Reservas</a>
             <a href="<?= Url::to(['/destino-favorito/index','id' => Yii::$app->user->id]) ?>" class="nav-item nav-link">Watchlist</a>
+            <?php } ?>
 
             <?php if (\Yii::$app->user->can('acederBackend')) { ?>
               <a href="<?= Url::to(['../../backend/web/site/login']) ?>" class="nav-item nav-link">Backend</a>

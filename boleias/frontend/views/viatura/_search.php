@@ -25,8 +25,6 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'cor') ?>
 
-    <?php // echo $form->field($model, 'lugares_disponiveis') ?>
-
     <?php // echo $form->field($model, 'perfil_id') ?>
 
     <div class="form-group">

@@ -77,35 +77,32 @@ class PerfilController extends Controller
         $perfil = Perfil::findOne(['user_id' => Yii::$app->user->id]);
 
         if ($perfil) {
-            return $this->redirect(['index','id'=>$perfil->user_id]);
+            return $this->redirect(['index', 'id' => $perfil->user_id]);
         }
-        else {
 
-            $model = new Perfil();
-            $model->user_id = Yii::$app->user->id;
+        $model = new Perfil();
+        $model->user_id = Yii::$app->user->id;
 
-            if ($model->load($this->request->post()) && $model->save()) {
-                $auth = \Yii::$app->authManager;
-                if($model->condutor){
-                    $role = $auth->getRole('condutor');
-                } else {
-                    $role = $auth->getRole('passageiro');
-                }
+        if ($model->load($this->request->post()) && $model->save()) {
+            $auth = Yii::$app->authManager;
 
+            // Se a checkbox estiver marcada, assume condutor; se null ou não marcada, assume passageiro
+            $roleName = $model->condutor ? 'condutor' : 'passageiro';
+            $role = $auth->getRole($roleName);
+
+            if ($role) {
                 $auth->assign($role, $model->user_id);
-                return $this->redirect(['view', 'id' => $model->id]);
             }
 
-            else {
-                $model->loadDefaultValues();
-            }
-
-
-            return $this->render('create', [
-                'model' => $model,
-            ]);
-
+            Yii::$app->session->setFlash('success', 'Perfil criado com sucesso!');
+            return $this->redirect(['view', 'id' => $model->id]);
+        } else {
+            $model->loadDefaultValues();
         }
+
+        return $this->render('create', [
+            'model' => $model,
+        ]);
     }
 
     /**
@@ -137,9 +134,27 @@ class PerfilController extends Controller
      */
     public function actionDelete($id)
     {
-        $this->findModel($id)->delete();
+        $model = Perfil::findOne($id);
+        if (!$model) {
+            throw new NotFoundHttpException("Perfil não encontrado.");
+        }
 
-        return $this->redirect(['index','id'=> $id]);
+        $auth = Yii::$app->authManager;
+
+
+        $roles = ['condutor', 'passageiro'];
+
+        foreach ($roles as $roleName) {
+            $role = $auth->getRole($roleName);
+            if ($role) {
+                $auth->revoke($role, $model->user_id);
+            }
+        }
+
+        $model->delete();
+
+        Yii::$app->session->setFlash('success', 'Perfil removido com sucesso.');
+        return $this->redirect(['index' ,'id' => $model->user_id]);
     }
 
     /**

@@ -33,7 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'origem',
             'destino',
             'data_hora',
-            'viatura_id',
+            'preco',
         ],
     ]) ?>
 

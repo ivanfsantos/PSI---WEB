@@ -36,8 +36,8 @@ class Viatura extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['marca', 'modelo', 'matricula', 'cor', 'lugares_disponiveis', 'perfil_id'], 'required'],
-            [['lugares_disponiveis', 'perfil_id'], 'integer'],
+            [['marca', 'modelo', 'matricula', 'cor', 'perfil_id'], 'required'],
+            [['perfil_id'], 'integer'],
             [['marca', 'modelo'], 'string', 'max' => 50],
             [['matricula'], 'string', 'max' => 15],
             [['cor'], 'string', 'max' => 20],
@@ -57,7 +57,6 @@ class Viatura extends \yii\db\ActiveRecord
             'modelo' => 'Modelo',
             'matricula' => 'Matricula',
             'cor' => 'Cor',
-            'lugares_disponiveis' => 'Lugares Disponiveis',
             'perfil_id' => 'Perfil ID',
         ];
     }

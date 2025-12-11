@@ -116,10 +116,23 @@ class UserController extends Controller
      * @return \yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionDelete($id)
+    public function actionDeactivate($id)
     {
-        $this->findModel($id)->delete();
+        $model = $this->findModel($id);
+        $model->status = 9; // inativo
+        $model->save(false);
 
+        Yii::$app->session->setFlash('warning', 'Utilizador desativado com sucesso.');
+        return $this->redirect(['index']);
+    }
+
+    public function actionReactivate($id)
+    {
+        $model = $this->findModel($id);
+        $model->status = 10; // ou 1, conforme o teu "status ativo"
+        $model->save(false);
+
+        Yii::$app->session->setFlash('success', 'Utilizador reativado com sucesso.');
         return $this->redirect(['index']);
     }
 

@@ -149,45 +149,49 @@ class SiteController extends Controller
         }
 
         $viaturasUser = Viatura::find()->where(['perfil_id' => $perfil->id])->all();
+        if (empty($viaturasUser)) {
+            Yii::$app->session->setFlash('error', 'É necessário ter pelo menos uma viatura para criar uma boleia.');
+            return $this->redirect(['viatura/create','id' => $perfil->id]);
+        }
 
         $existeDocumentoValido = Documento::find()
             ->where(['perfil_id' => $perfil->id, 'valido' => 1])
             ->exists();
 
-        if ($existeDocumentoValido) {
-
-            if ($this->request->isPost) {
-
-                if ($model->load($this->request->post())) {
-
-                    $boleiaExistente = Boleia::find()
-                        ->where(['viatura_id' => $model->viatura_id])
-                        ->exists();
-
-                    if ($boleiaExistente) {
-                        Yii::$app->session->setFlash('error', 'Esta viatura já possui uma boleia ativa. Cada carro só pode ter uma boleia.');
-                        return $this->redirect(['site/index']);
-                    }
-
-                    if ($model->save()) {
-                        Yii::$app->session->setFlash('success', 'Boleia criada com sucesso!');
-                        return $this->redirect(['view', 'id' => $model->id]);
-                    }
-                }
-            }
-
-        } else {
-
+        if (!$existeDocumentoValido) {
             Yii::$app->session->setFlash('error', 'É necessário ter pelo menos um documento válido para criar uma boleia.');
             return $this->redirect(['documento/index', 'id' => $perfil->user->id]);
         }
 
+        if ($this->request->isPost) {
+            if ($model->load($this->request->post())) {
+
+                $boleiaExistente = Boleia::find()
+                    ->where(['viatura_id' => $model->viatura_id])
+                    ->andWhere(['between', 'data_hora',
+                        date('Y-m-d 00:00:00', strtotime($model->data_hora)),
+                        date('Y-m-d 23:59:59', strtotime($model->data_hora))
+                    ])
+                    ->exists();
+
+                if ($boleiaExistente) {
+                    Yii::$app->session->setFlash('error', 'Esta viatura já possui uma boleia criada para esta data.');
+                    return $this->redirect(['site/index']);
+                }
+
+                if ($model->save()) {
+                    Yii::$app->session->setFlash('success', 'Boleia criada com sucesso!');
+                    return $this->redirect(['view', 'id' => $model->id]);
+                }
+            }
+        } else {
+            $model->loadDefaultValues();
+        }
 
         return $this->render('create', [
             'model' => $model,
             'viaturas' => $viaturasUser,
         ]);
-
     }
 
 

@@ -21,7 +21,6 @@ class m251006_195150_create_viaturas_table extends Migration
             'modelo' => $this->string(50)->notNull(),
             'matricula' => $this->string(15)->notNull()->unique(),
             'cor' => $this->string(20)->notNull(),
-            'lugares_disponiveis' => $this->integer()->notNull(),
             'perfil_id' => $this->integer()->notNull(),
         ], 'ENGINE=InnoDB');
 

@@ -145,7 +145,7 @@ class DocumentoController extends Controller
                 ]);
 
                 $model->save();
-                $message="Arquivos enviado com sucesso";
+                $message="Documentos enviado com sucesso";
             }
 
             if(!$cartaoFileName || !$cartaFileName)

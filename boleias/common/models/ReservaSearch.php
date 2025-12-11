@@ -18,7 +18,6 @@ class ReservaSearch extends Reserva
     {
         return [
             [['id', 'perfil_id', 'boleia_id'], 'integer'],
-            [['estado'], 'safe'],
         ];
     }
 
@@ -64,7 +63,6 @@ class ReservaSearch extends Reserva
             'boleia_id' => $this->boleia_id,
         ]);
 
-        $query->andFilterWhere(['like', 'estado', $this->estado]);
 
         return $dataProvider;
     }

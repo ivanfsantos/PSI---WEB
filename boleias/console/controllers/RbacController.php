@@ -100,6 +100,10 @@ class RbacController extends Controller
         $criarReserva->description = 'Criar uma Reserva';
         $auth->add($criarReserva);
 
+        $verMinhasReservas = $auth->createPermission('verMinhasReservas');
+        $verMinhasReservas->description = 'Ver as minhas Reservas';
+        $auth->add($verMinhasReservas);
+
         $cancelarReserva = $auth->createPermission('cancelarReserva');
         $cancelarReserva->description = 'Cancelar uma Reserva';
         $auth->add($cancelarReserva);
@@ -205,6 +209,8 @@ class RbacController extends Controller
         $auth->addChild($passageiro, $editarPassageiro);
         $auth->addChild($passageiro, $eliminarPassageiro);
         $auth->addChild($passageiro, $acederBoleia);
+        $auth->addChild($passageiro, $verMinhasReservas);
+
 
 
 

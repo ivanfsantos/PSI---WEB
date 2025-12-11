@@ -17,7 +17,7 @@ class BoleiaSearch extends Boleia
     public function rules()
     {
         return [
-            [['id', 'viatura_id'], 'integer'],
+            [['id','lugares_disponiveis','viatura_id'], 'integer'],
             [['origem', 'destino', 'data_hora'], 'safe'],
         ];
     }
@@ -67,6 +67,7 @@ class BoleiaSearch extends Boleia
         $query->andFilterWhere([
             'id' => $this->id,
             'data_hora' => $this->data_hora,
+            'lugares_disponiveis' => $this->lugares_disponiveis,
             'viatura_id' => $this->viatura_id,
         ]);
 

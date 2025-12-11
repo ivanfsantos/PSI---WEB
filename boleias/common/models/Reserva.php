@@ -8,12 +8,15 @@ use Yii;
  * This is the model class for table "reservas".
  *
  * @property int $id
- * @property string $estado
- * @property int $perfil_id
- * @property int $boleia_id
- *
- * @property Boleias $boleia
- * @property Perfis $perfil
+ * * @property string|null $estado
+ * * @property int $perfil_id
+ * * @property int $boleia_id
+ * * @property string|null $ponto_encontro
+ * * @property int|null $contacto
+ * * @property float|null $reembolso
+ * *
+ * * @property Boleias $boleia
+ * * @property Perfis $perfil
  */
 class Reserva extends \yii\db\ActiveRecord
 {
@@ -33,9 +36,9 @@ class Reserva extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['estado', 'perfil_id', 'boleia_id'], 'required'],
-            [['perfil_id', 'boleia_id'], 'integer'],
-            [['estado'], 'string', 'max' => 20],
+            [['perfil_id', 'boleia_id', 'contacto'], 'integer'],
+            [['reembolso'], 'number'],
+            [['ponto_encontro'], 'string'],
             [['boleia_id'], 'exist', 'skipOnError' => true, 'targetClass' => Boleia::class, 'targetAttribute' => ['boleia_id' => 'id']],
             [['perfil_id'], 'exist', 'skipOnError' => true, 'targetClass' => Perfil::class, 'targetAttribute' => ['perfil_id' => 'id']],
         ];
@@ -48,9 +51,11 @@ class Reserva extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'estado' => 'Estado',
-            'perfil_id' => 'Perfil ID',
-            'boleia_id' => 'Boleia ID',
+            'perfil_id' => 'Perfil',
+            'boleia_id' => 'Boleia',
+            'ponto_encontro' => 'Ponto de Encontro',
+            'contacto' => 'Contacto',
+            'reembolso' => 'Reembolso',
         ];
     }
 

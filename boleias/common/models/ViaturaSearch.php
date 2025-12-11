@@ -17,7 +17,7 @@ class ViaturaSearch extends Viatura
     public function rules()
     {
         return [
-            [['id', 'lugares_disponiveis', 'perfil_id'], 'integer'],
+            [['id', 'perfil_id'], 'integer'],
             [['marca', 'modelo', 'matricula', 'cor'], 'safe'],
         ];
     }
@@ -60,7 +60,6 @@ class ViaturaSearch extends Viatura
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'lugares_disponiveis' => $this->lugares_disponiveis,
             'perfil_id' => $this->perfil_id,
         ]);
 

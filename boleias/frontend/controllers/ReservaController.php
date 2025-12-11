@@ -7,6 +7,7 @@ use common\models\Perfil;
 use common\models\Reserva;
 use common\models\ReservaSearch;
 use Yii;
+use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -77,6 +78,73 @@ class ReservaController extends Controller
         ]);
     }
 
+    public function actionReservas($id){
+
+
+        $boleia = Boleia::findOne($id);
+
+        if (!$boleia) {
+            Yii::$app->session->setFlash('error', 'Boleia não encontrada!');
+            return $this->redirect(['site/index']);
+        }
+
+        $perfil = Yii::$app->user->identity->perfil;
+
+        if ($boleia->viatura->perfil_id != $perfil->id) {
+            Yii::$app->session->setFlash('error', 'Não tem permissão para ver estas reservas.');
+            return $this->redirect(['site/index']);
+        }
+
+        $query = Reserva::find()->where(['boleia_id' => $id]);
+
+        $dataProvider = new ActiveDataProvider([
+            'query' => $query,
+            'pagination' => [
+                'pageSize' => 20,
+            ],
+        ]);
+
+        return $this->render('index-reservas', [
+            'dataProvider' => $dataProvider,
+            'boleia_id' => $id,
+        ]);
+    }
+
+    public function actionValidar($id){
+
+        $reservas = Reserva::find()->where(['boleia_id' => $id, 'estado' => 'Pendente'])->all();
+
+        if (empty($reservas)) {
+            Yii::$app->session->setFlash('error', 'Não existem reservas pendentes para esta boleia!');
+            return $this->redirect(['reservas', 'id' => $id]);
+        }
+
+        $boleia = $reservas[0]->boleia;
+
+        if (!$boleia) {
+            Yii::$app->session->setFlash('error', 'Boleia não encontrada!');
+            return $this->redirect(['reservas', 'id' => $id]);
+        }
+
+        $totalPassageiros = Reserva::find()->where(['boleia_id' => $id])->count();
+        $precoTotal = $boleia->preco;
+
+        foreach ($reservas as $reserva) {
+            $reserva->estado = 'Pago';
+
+            $valorPorPassageiro = round($precoTotal / $totalPassageiros, 2);
+
+            $reserva->reembolso = round($precoTotal - $valorPorPassageiro, 2);
+
+            $reserva->save(false);
+        }
+
+        Yii::$app->session->setFlash('success', 'Todas as reservas foram validadas e os reembolsos calculados com sucesso!');
+        return $this->redirect(['reservas', 'id' => $id]);
+    }
+
+
+
 
     /**
      * Displays a single Reserva model.
@@ -108,10 +176,8 @@ class ReservaController extends Controller
             return $this->redirect(['perfil/create']);
         }
 
-
         $hasExistingReservation = Reserva::find()
-            ->where(['boleia_id' => $id])
-            ->andWhere(['perfil_id' => $perfil->id])
+            ->where(['boleia_id' => $id, 'perfil_id' => $perfil->id])
             ->exists();
 
         if ($hasExistingReservation) {
@@ -119,25 +185,24 @@ class ReservaController extends Controller
             return $this->redirect(['reserva/index', 'id'=> $userId]);
         }
 
-
-        $model->estado = 'Pendente';
         $model->perfil_id = $perfil->id;
         $model->boleia_id = $id;
+        $model->reembolso = 0;
 
-        $viatura = $model->boleia->viatura;
+        $boleia = Boleia::findOne($id);
 
-        if ($viatura->lugares_disponiveis <= 0) {
-            Yii::$app->session->setFlash('error', 'Não há lugares disponíveis na viatura!');
+        if ($boleia->lugares_disponiveis <= 0) {
+            Yii::$app->session->setFlash('error', 'Não há lugares disponíveis nesta boleia!');
             return $this->redirect(['index']); // Redirect back to trip listings
         }
 
         if ($this->request->isPost) {
             if ($model->load($this->request->post()) && $model->save()) {
 
-                $viatura->lugares_disponiveis--;
-                $viatura->save();
+                $boleia->lugares_disponiveis--;
+                $boleia->save(false);
 
-                Yii::$app->session->setFlash('success', 'Reserva efetuada com sucesso!');
+                Yii::$app->session->setFlash('success', "Reserva efetuada com sucesso!");
                 return $this->redirect(['view', 'id' => $model->id]);
             }
         } else {

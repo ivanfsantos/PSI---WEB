@@ -18,7 +18,10 @@ class m251006_195237_create_reservas_table extends Migration
     {
         $this->createTable('{{%reservas}}', [
             'id' => $this->primaryKey(),
-            'estado' => $this->string(20)->notNull(),
+            'ponto_encontro' => $this->text()->notNull(),
+            'contacto' => $this->integer()->notNull(),
+            'reembolso' => $this->float()->notNull()->defaultValue(0),
+            'estado' => $this->string()->notNull()->defaultValue('Pendente'),
             'perfil_id' => $this->integer()->notNull(),
             'boleia_id' => $this->integer()->notNull(),
         ], 'ENGINE=InnoDB');
