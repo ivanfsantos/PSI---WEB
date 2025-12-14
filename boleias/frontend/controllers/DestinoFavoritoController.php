@@ -1,51 +1,57 @@
 <?php
 
 namespace frontend\controllers;
+
 use Yii;
 use common\models\DestinoFavorito;
 use common\models\DestinoFavoritoSearch;
 use common\models\Perfil;
-use yii\base\ErrorException;
-use yii\base\Model;
-use yii\db\Exception;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
+use yii\base\ErrorException;
 
-
-
-/**
- * DestinoFavoritoController implements the CRUD actions for DestinoFavorito model.
- */
 class DestinoFavoritoController extends Controller
 {
-    /**
-     * @inheritDoc
-     */
     public function behaviors()
     {
-        return array_merge(
-            parent::behaviors(),
-            [
-                'verbs' => [
-                    'class' => VerbFilter::className(),
-                    'actions' => [
-                        'delete' => ['POST'],
+        return array_merge(parent::behaviors(), [
+            'access' => [
+                'class' => AccessControl::class,
+                'only' => ['index', 'view', 'create', 'update', 'delete'],
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
                     ],
                 ],
-            ]
-        );
+                'denyCallback' => function () {
+                    return Yii::$app->response->redirect(['site/login']);
+                },
+            ],
+            'verbs' => [
+                'class' => VerbFilter::class,
+                'actions' => [
+                    'delete' => ['POST'],
+                ],
+            ],
+        ]);
     }
 
-    /**
-     * Lists all DestinoFavorito models.
-     *
-     * @return string
-     */
     public function actionIndex()
     {
+        $perfil = Perfil::findOne(['user_id' => Yii::$app->user->id]);
+        if (!$perfil) {
+            Yii::$app->session->setFlash('error', 'É preciso criar um perfil antes de aceder à watchlist.');
+            return $this->redirect(['/site/index']);
+        }
+
         $searchModel = new DestinoFavoritoSearch();
-        $dataProvider = $searchModel->search($this->request->queryParams);
+        $dataProvider = $searchModel->search(array_merge(
+            Yii::$app->request->queryParams,
+            ['DestinoFavoritoSearch' => ['perfil_id' => $perfil->id]]
+        ));
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -53,12 +59,6 @@ class DestinoFavoritoController extends Controller
         ]);
     }
 
-    /**
-     * Displays a single DestinoFavorito model.
-     * @param int $id ID
-     * @return string
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionView($id)
     {
         return $this->render('view', [
@@ -66,51 +66,33 @@ class DestinoFavoritoController extends Controller
         ]);
     }
 
-    /**
-     * Creates a new DestinoFavorito model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return string|\yii\web\Response
-     */
     public function actionCreate($boleia_id)
     {
+        $perfil = Perfil::findOne(['user_id' => Yii::$app->user->id]);
+        if (!$perfil) {
+            throw new NotFoundHttpException('Perfil nao encontrado');
+        }
 
-       $perfil = Perfil::findOne(['user_id'=>Yii::$app->user->id]);
+        $model = new DestinoFavorito();
+        $model->perfil_id = $perfil->id;
+        $model->boleia_id = $boleia_id;
 
-       if(!$perfil)
-       {
-           throw new NotFoundHttpException('Perfil nao encontrado');
-       }
+        $existe = DestinoFavorito::find()->where([
+            'perfil_id' => $model->perfil->id,
+            'boleia_id' => $model->boleia_id
+        ])->one();
 
-       $model = new DestinoFavorito();
+        if ($existe) {
+            return $this->redirect(Yii::$app->request->referrer);
+        }
 
-       $model->perfil_id = $perfil->id;
-       $model->boleia_id = $boleia_id;
-
-       $existe = DestinoFavorito::find()->where(['perfil_id'=>$model->perfil->id,
-                                                'boleia_id'=>$model->boleia_id ])->one();
-
-       if($existe){
-           return $this->redirect(Yii::$app->request->referrer);
-       }
-       if($model->save())
-       {
-           return $this->redirect(Yii::$app->request->referrer);
-       }else
-       {
-           throw new ErrorException('Nao foi possivel adicionar a viagem á wishlist');
-       }
+        if ($model->save()) {
+            return $this->redirect(Yii::$app->request->referrer);
+        } else {
+            throw new ErrorException('Nao foi possivel adicionar a viagem á wishlist');
+        }
     }
 
-
-    
-
-    /**
-     * Updates an existing DestinoFavorito model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $id ID
-     * @return string|\yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
@@ -124,13 +106,6 @@ class DestinoFavoritoController extends Controller
         ]);
     }
 
-    /**
-     * Deletes an existing DestinoFavorito model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $id ID
-     * @return \yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
@@ -138,13 +113,6 @@ class DestinoFavoritoController extends Controller
         return $this->redirect(Yii::$app->request->referrer);
     }
 
-    /**
-     * Finds the DestinoFavorito model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $id ID
-     * @return DestinoFavorito the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     protected function findModel($id)
     {
         if (($model = DestinoFavorito::findOne(['id' => $id])) !== null) {

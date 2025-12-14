@@ -1,13 +1,13 @@
 <?php
 
 use common\models\Documento;
-use yii\helpers\Html;
-use yii\helpers\Url;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
+use yii\helpers\Html;
+use yii\helpers\Url;
 
 /** @var yii\web\View $this */
-/** @var frontend\models\DocumentoSearch $searchModel */
+/** @var \common\models\DocumentoSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
 $this->title = 'Documentos';
@@ -20,6 +20,8 @@ $this->params['breadcrumbs'][] = $this->title;
     <p>
         <?= Html::a('Enviar Documentos', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
+
+    <div class="card p-3 mb-5 bg-white border border-5 rounded-4">
 
 
     <?= GridView::widget([

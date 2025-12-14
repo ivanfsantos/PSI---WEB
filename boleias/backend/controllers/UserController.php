@@ -10,14 +10,10 @@ use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
-/**
- * UserController implements the CRUD actions for User model.
- */
+
 class UserController extends Controller
 {
-    /**
-     * @inheritDoc
-     */
+
     public function behaviors()
     {
         return array_merge(
@@ -40,11 +36,7 @@ class UserController extends Controller
         );
     }
 
-    /**
-     * Lists all User models.
-     *
-     * @return string
-     */
+
     public function actionIndex()
     {
         $searchModel = new UserSearch();
@@ -56,12 +48,7 @@ class UserController extends Controller
         ]);
     }
 
-    /**
-     * Displays a single User model.
-     * @param int $id
-     * @return string
-     * @throws NotFoundHttpException if the model cannot be found
-     */
+
     public function actionView($id)
     {
         return $this->render('view', [
@@ -69,11 +56,7 @@ class UserController extends Controller
         ]);
     }
 
-    /**
-     * Creates a new User model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return string|\yii\web\Response
-     */
+
     public function actionSignup()
     {
         $model = new SignupAdmin();
@@ -89,13 +72,7 @@ class UserController extends Controller
         ]);
     }
 
-    /**
-     * Updates an existing User model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $id
-     * @return string|\yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
+
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
@@ -109,27 +86,28 @@ class UserController extends Controller
         ]);
     }
 
-    /**
-     * Deletes an existing User model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $id
-     * @return \yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
-    public function actionDelete($id)
-    {
-        $this->findModel($id)->delete();
 
+    public function actionDeactivate($id)
+    {
+        $model = $this->findModel($id);
+        $model->status = 9; // inativo
+        $model->save(false);
+
+        Yii::$app->session->setFlash('warning', 'Utilizador desativado com sucesso.');
         return $this->redirect(['index']);
     }
 
-    /**
-     * Finds the User model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $id
-     * @return User the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
+    public function actionReactivate($id)
+    {
+        $model = $this->findModel($id);
+        $model->status = 10; // ou 1, conforme o teu "status ativo"
+        $model->save(false);
+
+        Yii::$app->session->setFlash('success', 'Utilizador reativado com sucesso.');
+        return $this->redirect(['index']);
+    }
+
+
     protected function findModel($id)
     {
         if (($model = User::findOne(['id' => $id])) !== null) {

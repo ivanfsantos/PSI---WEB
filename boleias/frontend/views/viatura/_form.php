@@ -20,8 +20,6 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'cor')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'lugares_disponiveis')->textInput() ?>
-
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>

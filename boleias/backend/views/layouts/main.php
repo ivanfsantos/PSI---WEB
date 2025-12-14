@@ -79,6 +79,14 @@ $this->beginPage();
 <script src="htmlcodex/lib/easing/easing.min.js"></script>
 <script src="htmlcodex/lib/waypoints/waypoints.min.js"></script>
 <script src="htmlcodex/lib/owlcarousel/owl.carousel.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        })
+    });
+</script>
 
 <?php $this->endBody() ?>
 </body>

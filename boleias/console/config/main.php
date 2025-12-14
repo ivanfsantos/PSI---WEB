@@ -23,6 +23,14 @@ return [
           ],
     ],
     'components' => [
+        'db' => [
+            'class' => 'yii\db\Connection',
+            'dsn' => 'mysql:host=localhost;dbname=bdboleias',
+            'username' => 'root',
+            'password' => '',
+            'charset' => 'utf8',
+            ],
+
         'authManager' => [
             'class' => 'yii\rbac\DbManager',
         ],

@@ -5,32 +5,17 @@ namespace common\models;
 use app\models\PersonForm;
 use Yii;
 
-/**
- * This is the model class for table "documentos".
- *
- * @property int $id
- * @property string|null $carta_conducao
- * @property string|null $cartao_cidadao
- * @property int $valido
- * @property int|null $perfil_id
- *
- * @property Perfil $perfil
- */
+
 class Documento extends \yii\db\ActiveRecord
 {
 
 
-    /**
-     * {@inheritdoc}
-     */
     public static function tableName()
     {
         return 'documentos';
     }
 
-    /**
-     * {@inheritdoc}
-     */
+
     public function rules()
     {
         return [
@@ -42,9 +27,7 @@ class Documento extends \yii\db\ActiveRecord
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
+
     public function attributeLabels()
     {
         return [
@@ -56,11 +39,7 @@ class Documento extends \yii\db\ActiveRecord
         ];
     }
 
-    /**
-     * Gets query for [[Perfil]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
+
     public function getPerfil()
     {
         return $this->hasOne(Perfil::class, ['id' => 'perfil_id']);

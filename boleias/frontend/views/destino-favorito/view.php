@@ -6,7 +6,6 @@ use yii\widgets\DetailView;
 /** @var yii\web\View $this */
 /** @var common\models\DestinoFavorito $model */
 
-$this->title = $model->id;
 $this->params['breadcrumbs'][] = ['label' => 'Destino Favoritos', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 \yii\web\YiiAsset::register($this);
@@ -29,7 +28,6 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= DetailView::widget([
         'model' => $model,
         'attributes' => [
-            'id',
             'perfil_id',
             'tipo',
             'endereco',

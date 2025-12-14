@@ -47,11 +47,14 @@ $this->beginPage();
                 <?= Html::beginForm(['/site/logout'], 'post', ['class' => 'd-inline']) ?>
 
     <div class="collapse navbar-collapse" id="navbarCollapse">
-
         <div class="navbar-nav ms-auto p-4 p-lg-0">
             <a href="<?= Url::to(['/perfil/index','id' => Yii::$app->user->id]) ?>" class="nav-item nav-link">Perfil</a>
+
+
+
             <a href="<?= Url::to(['/reserva/index','id' => Yii::$app->user->id]) ?>" class="nav-item nav-link">Reservas</a>
             <a href="<?= Url::to(['/destino-favorito/index','id' => Yii::$app->user->id]) ?>" class="nav-item nav-link">Watchlist</a>
+                <a href="<?= Url::to(['/condutor-favorito/index','id' => Yii::$app->user->id]) ?>" class="nav-item nav-link">Condutores</a>
 
             <?php if (\Yii::$app->user->can('acederBackend')) { ?>
               <a href="<?= Url::to(['../../backend/web/site/login']) ?>" class="nav-item nav-link">Backend</a>
@@ -94,6 +97,14 @@ $this->beginPage();
 <script src="htmlcodex/lib/easing/easing.min.js"></script>
 <script src="htmlcodex/lib/waypoints/waypoints.min.js"></script>
 <script src="htmlcodex/lib/owlcarousel/owl.carousel.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        })
+    });
+</script>
 
 <?php $this->endBody() ?>
 </body>

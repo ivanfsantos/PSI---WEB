@@ -1,16 +1,15 @@
 <?php
 
 use common\models\Documento;
-use yii\helpers\Html;
-use yii\helpers\Url;
 use yii\grid\ActionColumn;
 use yii\grid\GridView;
+use yii\helpers\Html;
+use yii\helpers\Url;
 
 /** @var yii\web\View $this */
-/** @var frontend\models\DocumentoSearch $searchModel */
+/** @var \common\models\DocumentoSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Documentos';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="documento-index">
@@ -25,9 +24,10 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
 
             [
-                'attribute' => 'perfil_id', // Mantém o label original
-                'label' => 'Nome', // Altera o texto do label para maior clareza
-                'value' => $model->perfil->nome ?? 'Perfil não encontrado',
+                'label' => 'Docs', // coluna de numeração
+                'value' => function($model, $key, $index, $column) {
+                    return $index + 1; // $index começa em 0, então somamos 1
+                },
             ],
 
             [

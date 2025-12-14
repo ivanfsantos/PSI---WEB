@@ -20,6 +20,8 @@ class m251006_195228_create_boleias_table extends Migration
             'origem' => $this->string(255)->notNull(),
             'destino' => $this->string(255)->notNull(),
             'data_hora' => $this->datetime()->notNull(),
+            'lugares_disponiveis' => $this->integer()->notNull(),
+            'preco' => $this->decimal(10,2)->notNull(),
             'viatura_id' => $this->integer()->notNull(),
         ], 'ENGINE=InnoDB');
 

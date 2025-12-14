@@ -24,6 +24,12 @@ use yii\widgets\ActiveForm;
         ['prompt' => 'Selecione uma viatura']
 )->label('Viaturas');?>
 
+    <?= $form->field($model, 'preco')->input('number', ['step' => '0.01']) ?>
+
+    <?= $form->field($model, 'lugares_disponiveis')->textInput() ?>
+
+
+
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
     </div>

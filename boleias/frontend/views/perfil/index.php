@@ -61,7 +61,13 @@ $this->params['breadcrumbs'][] = $this->title;
                 'morada',
                 'genero',
                 'data_nascimento',
-                'condutor',
+                [
+                    'attribute' => 'condutor',
+                    'label' => 'Condutor',
+                    'value' => function($model) {
+                        return $model->condutor ? 'Sim' : 'Não';
+                    },
+                ],
                 [
                     'class' => ActionColumn::className(),
                     'urlCreator' => function ($action, Perfil $model, $key, $index, $column) {

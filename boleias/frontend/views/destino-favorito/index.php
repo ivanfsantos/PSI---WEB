@@ -51,23 +51,59 @@ $this->params['breadcrumbs'][] = $this->title;
                 }
             ],
             [
-                'label'=>'Remover',
-                'format'=>'raw',
-                'value'=>function ($model) {
-                    return Html::a(
+                'label' => 'Ações',
+                'format' => 'raw',
+                'value' => function ($model) {
+                    $buttons = '';
+
+                    // Botão Remover
+                    $buttons .= Html::a(
                         '<i class="bi bi-trash"></i> Remover',
                         ['destino-favorito/delete', 'id' => $model->id],
                         [
-                            'class' => 'btn btn-danger btn-sm',
+                            'class' => 'btn btn-danger btn-sm me-1',
                             'data' => [
                                 'confirm' => 'Tens a certeza que queres remover esta boleia da wishlist?',
-                                'method' => 'post', //
+                                'method' => 'post',
                             ],
                         ]
                     );
-                }
 
-            ]
+                    if ($model->boleia) {
+                        $perfil = \common\models\Perfil::findOne(['user_id' => Yii::$app->user->id]);
+
+                        if ($perfil) {
+                            // Aqui consultamos diretamente a tabela Reserva
+                            $reservaExistente = \common\models\Reserva::find()
+                                ->where([
+                                    'boleia_id' => $model->boleia->id,
+                                    'perfil_id' => $perfil->id,
+                                ])
+                                ->exists();
+
+                            if (!$reservaExistente) {
+                                // Mostra botão de reservar
+                                $buttons .= Html::a(
+                                    '<i class="bi bi-check-circle"></i> Reservar',
+                                    ['reserva/create', 'id' => $model->boleia->id],
+                                    [
+                                        'class' => 'btn btn-success btn-sm',
+                                        'title' => 'Criar reserva',
+                                    ]
+                                );
+                            } else {
+                                // Opcional: mostra "Reservado" ou apenas esconde o botão
+                                $buttons .= Html::tag('span', 'Reservado', [
+                                    'class' => 'btn btn-secondary btn-sm disabled'
+                                ]);
+                            }
+                        }
+                    }
+
+                    return $buttons;
+                },
+            ],
+
         ],
     ]); ?>
 
