@@ -18,29 +18,9 @@ class m251006_195245_create_avaliacoes_table extends Migration
         $this->createTable('{{%avaliacoes}}', [
             'id' => $this->primaryKey(),
             'descricao' => $this->text()->notNull(),
-            'rating' => $this->integer()->notNull(),
-            'boleia_id'=> $this->integer()->notNull(),
             'perfil_id'=> $this->integer()->notNull(),
 
         ], 'ENGINE=InnoDB');
-
-        // creates index for column `boleia_id`
-        $this->createIndex(
-            '{{%idx-avaliacoes-boleia_id}}',
-            '{{%avaliacoes}}',
-            'boleia_id'
-        );
-
-        // add foreign key for table `{{%boleias}}`
-        $this->addForeignKey(
-            '{{%fk-avaliacoes-boleia_id}}',
-            '{{%avaliacoes}}',
-            'boleia_id',
-            '{{%boleias}}',
-            'id',
-            'CASCADE'
-        );
-
 
 
         // creates index for column `perfil_id`
@@ -66,18 +46,6 @@ class m251006_195245_create_avaliacoes_table extends Migration
      */
     public function safeDown()
     {
-        // drops foreign key for table `{{%boleias}}`
-        $this->dropForeignKey(
-            '{{%fk-avaliacoes-boleia_id}}',
-            '{{%avaliacoes}}'
-        );
-
-        // drops index for column `boleia_id`
-        $this->dropIndex(
-            '{{%idx-avaliacoes-boleia_id}}',
-            '{{%avaliacoes}}'
-        );
-
         $this->dropTable('{{%avaliacoes}}');
     }
 }

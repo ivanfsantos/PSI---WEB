@@ -3,6 +3,7 @@
 namespace backend\controllers;
 
 use app\models\User;
+use common\models\Avaliacao;
 use common\models\Documento;
 use common\models\LoginForm;
 use common\models\SignupAdmin;
@@ -13,14 +14,10 @@ use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\Response;
 
-/**
- * Site controller
- */
+
 class SiteController extends Controller
 {
-    /**
-     * {@inheritdoc}
-     */
+
     public function behaviors()
     {
         return [
@@ -45,9 +42,6 @@ class SiteController extends Controller
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function actions()
     {
         return [
@@ -57,22 +51,24 @@ class SiteController extends Controller
         ];
     }
 
-    /**
-     * Displays homepage.
-     *
-     * @return string
-     */
+
     public function actionIndex()
     {
         $qtdDocumentosPendentes = Documento::find()->where(['valido' => 0])->count();
 
         $searchModel = new UserSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
-        $qtdUsersRegisto = $dataProvider->query->count();
+
+        $qtdUsersRegisto = $dataProvider->getTotalCount();
+
+        $qtdAvaliacoes = Avaliacao::find()->count();
 
         return $this->render('index', [
             'qtdDocumentosPendentes' => $qtdDocumentosPendentes,
             'qtdUsersRegisto' => $qtdUsersRegisto,
+            'qtdAvaliacoes' => $qtdAvaliacoes,
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
         ]);
     }
 
@@ -89,11 +85,7 @@ class SiteController extends Controller
         ]);
     }
 
-    /**
-     * Login action.
-     *
-     * @return string|Response
-     */
+
     public function actionLogin()
     {
         if (!Yii::$app->user->isGuest) {
@@ -114,11 +106,7 @@ class SiteController extends Controller
         ]);
     }
 
-    /**
-     * Logout action.
-     *
-     * @return Response
-     */
+
     public function actionLogout()
     {
         Yii::$app->user->logout();

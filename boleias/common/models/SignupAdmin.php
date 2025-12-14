@@ -5,9 +5,7 @@ namespace common\models;
 use Yii;
 use yii\base\Model;
 
-/**
- * Signup form
- */
+
 class SignupAdmin extends Model
 {
     public $username;
@@ -15,9 +13,6 @@ class SignupAdmin extends Model
     public $password;
 
 
-    /**
-     * {@inheritdoc}
-     */
     public function rules()
     {
         return [
@@ -37,11 +32,6 @@ class SignupAdmin extends Model
         ];
     }
 
-    /**
-     * Signs user up.
-     *
-     * @return bool whether the creating new account was successful and email was sent
-     */
     public function signupAdmin()
     {
         if (!$this->validate()) {
@@ -68,11 +58,7 @@ class SignupAdmin extends Model
         return $this->sendEmail($user);
     }
 
-    /**
-     * Sends confirmation email to user
-     * @param User $user user model to with email should be send
-     * @return bool whether the email was sent
-     */
+
     protected function sendEmail($user)
     {
         return Yii::$app

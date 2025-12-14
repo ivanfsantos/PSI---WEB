@@ -2,6 +2,10 @@ suite_namespace: frontend\tests\unit
 actor: UnitTester
 modules:
     enabled:
+        - Db:
+              dsn: 'mysql:host=localhost;dbname=bdboleiasteste'
+              user: 'root'
+              password: ''
         - Yii2:
-            part: [orm, email, fixtures]
+              part: [orm, email, fixtures]
         - Asserts

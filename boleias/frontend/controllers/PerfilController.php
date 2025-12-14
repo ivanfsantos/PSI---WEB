@@ -2,44 +2,55 @@
 
 namespace frontend\controllers;
 
+use common\models\Avaliacao;
 use common\models\Perfil;
 use common\models\PerfilSearch;
+use common\models\Viatura;
 use Yii;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 
-/**
- * PerfilController implements the CRUD actions for Perfil model.
- */
 class PerfilController extends Controller
 {
-    /**
-     * @inheritDoc
-     */
     public function behaviors()
     {
-        return array_merge(
-            parent::behaviors(),
-            [
-                'verbs' => [
-                    'class' => VerbFilter::className(),
-                    'actions' => [
-                        'delete' => ['POST'],
+        return array_merge(parent::behaviors(), [
+            'access' => [
+                'class' => AccessControl::class,
+                'only' => ['index', 'view', 'create', 'update', 'delete', 'perfil'],
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
                     ],
                 ],
-            ]
-        );
+                'denyCallback' => function () {
+                    return Yii::$app->response->redirect(['site/login']);
+                },
+            ],
+            'verbs' => [
+                'class' => VerbFilter::class,
+                'actions' => [
+                    'delete' => ['POST'],
+                ],
+            ],
+        ]);
     }
 
-    /**
-     * Lists all Perfil models.
-     *
-     * @return string
-     */
+    public function actionPerfil($id)
+    {
+        $avaliacoes = Avaliacao::find()->where(['perfil_id' => $id])->all();
+
+        return $this->render('perfil', [
+            'model' => $this->findModel($id),
+            'avaliacoes' => $avaliacoes,
+        ]);
+    }
+
     public function actionIndex($id)
     {
-
         $searchModel = new PerfilSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $dataProvider->query->andWhere(['user_id' => $id]);
@@ -50,12 +61,6 @@ class PerfilController extends Controller
         ]);
     }
 
-    /**
-     * Displays a single Perfil model.
-     * @param int $id ID
-     * @return string
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionView($id)
     {
         return $this->render('view', [
@@ -63,11 +68,6 @@ class PerfilController extends Controller
         ]);
     }
 
-    /**
-     * Creates a new Perfil model.
-     * If creation is successful, the browser will be redirected to the 'view' page.
-     * @return string|\yii\web\Response
-     */
     public function actionCreate()
     {
         if (Yii::$app->user->isGuest) {
@@ -75,7 +75,6 @@ class PerfilController extends Controller
         }
 
         $perfil = Perfil::findOne(['user_id' => Yii::$app->user->id]);
-
         if ($perfil) {
             return $this->redirect(['index', 'id' => $perfil->user_id]);
         }
@@ -85,33 +84,23 @@ class PerfilController extends Controller
 
         if ($model->load($this->request->post()) && $model->save()) {
             $auth = Yii::$app->authManager;
-
-            // Se a checkbox estiver marcada, assume condutor; se null ou não marcada, assume passageiro
             $roleName = $model->condutor ? 'condutor' : 'passageiro';
             $role = $auth->getRole($roleName);
-
             if ($role) {
                 $auth->assign($role, $model->user_id);
             }
 
             Yii::$app->session->setFlash('success', 'Perfil criado com sucesso!');
             return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            $model->loadDefaultValues();
         }
+
+        $model->loadDefaultValues();
 
         return $this->render('create', [
             'model' => $model,
         ]);
     }
 
-    /**
-     * Updates an existing Perfil model.
-     * If update is successful, the browser will be redirected to the 'view' page.
-     * @param int $id ID
-     * @return string|\yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
@@ -125,13 +114,6 @@ class PerfilController extends Controller
         ]);
     }
 
-    /**
-     * Deletes an existing Perfil model.
-     * If deletion is successful, the browser will be redirected to the 'index' page.
-     * @param int $id ID
-     * @return \yii\web\Response
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     public function actionDelete($id)
     {
         $model = Perfil::findOne($id);
@@ -140,10 +122,7 @@ class PerfilController extends Controller
         }
 
         $auth = Yii::$app->authManager;
-
-
         $roles = ['condutor', 'passageiro'];
-
         foreach ($roles as $roleName) {
             $role = $auth->getRole($roleName);
             if ($role) {
@@ -154,16 +133,9 @@ class PerfilController extends Controller
         $model->delete();
 
         Yii::$app->session->setFlash('success', 'Perfil removido com sucesso.');
-        return $this->redirect(['index' ,'id' => $model->user_id]);
+        return $this->redirect(['index', 'id' => $model->user_id]);
     }
 
-    /**
-     * Finds the Perfil model based on its primary key value.
-     * If the model is not found, a 404 HTTP exception will be thrown.
-     * @param int $id ID
-     * @return Perfil the loaded model
-     * @throws NotFoundHttpException if the model cannot be found
-     */
     protected function findModel($id)
     {
         if (($model = Perfil::findOne(['id' => $id])) !== null) {

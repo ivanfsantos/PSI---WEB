@@ -11,10 +11,8 @@ class RbacController extends Controller
     {
         $auth = Yii::$app->authManager;
 
-        // Limpar todos os papéis e permissões para resetar o RBAC
         $auth->removeAll();
 
-        // ==== Definir Permissões ====
 
         //Passageiro
         $criarPassageiro = $auth->createPermission('criarPassageiro');

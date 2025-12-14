@@ -35,8 +35,6 @@ $this->params['breadcrumbs'][] = $this->title;
                 'modelo',
                 'matricula',
                 'cor',
-                'lugares_disponiveis',
-                //'perfil_id',
                 [
                     'class' => ActionColumn::className(),
                     // Ensure buttons are spaced correctly in the default template

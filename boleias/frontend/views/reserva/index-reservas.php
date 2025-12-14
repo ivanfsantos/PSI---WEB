@@ -10,7 +10,6 @@ use yii\grid\GridView;
 /** @var common\models\ReservaSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Reservas';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="reserva-index">

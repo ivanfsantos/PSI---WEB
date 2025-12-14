@@ -10,16 +10,13 @@ use yii\grid\GridView;
 /** @var common\models\UserSearch $searchModel */
 /** @var yii\data\ActiveDataProvider $dataProvider */
 
-$this->title = 'Users';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="user-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <p>
-        <?= Html::a('Create Admin', ['user/signup'], ['class' => 'btn btn-success']) ?>
-    </p>
+
 
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
     <div class="card p-3 mb-5 bg-white border border-5 rounded-4">
@@ -84,4 +81,10 @@ $this->params['breadcrumbs'][] = $this->title;
             ],
         ],
     ]); ?>
+    <br>
+        <p>
+            <?= Html::a('Create Admin', ['user/signup'], ['class' => 'btn btn-success']) ?>
+        </p>
+
+
     </div>

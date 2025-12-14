@@ -4,35 +4,15 @@ namespace common\models;
 
 use Yii;
 
-/**
- * This is the model class for table "boleias".
- *
- * @property int $id
- * @property string $origem
- * @property string $destino
- * @property string $data_hora
- * @property int $viatura_id
- *
- * @property Avaliacoes[] $avaliacoes
- * @property DestinosFavoritos[] $destinosFavoritos
- * @property Reservas[] $reservas
- * @property Viaturas $viatura
- */
+
 class Boleia extends \yii\db\ActiveRecord
 {
 
-
-    /**
-     * {@inheritdoc}
-     */
     public static function tableName()
     {
         return 'boleias';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function rules()
     {
         return [
@@ -45,9 +25,6 @@ class Boleia extends \yii\db\ActiveRecord
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function attributeLabels()
     {
         return [
@@ -60,41 +37,21 @@ class Boleia extends \yii\db\ActiveRecord
         ];
     }
 
-    /**
-     * Gets query for [[Avaliacoes]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
     public function getAvaliacoes()
     {
         return $this->hasMany(Avaliacao::class, ['boleia_id' => 'id']);
     }
 
-    /**
-     * Gets query for [[DestinosFavoritos]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
     public function getDestinosFavoritos()
     {
         return $this->hasMany(DestinoFavorito::class, ['boleia_id' => 'id']);
     }
 
-    /**
-     * Gets query for [[Reservas]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
     public function getReservas()
     {
         return $this->hasMany(Reserva::class, ['boleia_id' => 'id']);
     }
 
-    /**
-     * Gets query for [[Viatura]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
     public function getViatura()
     {
         return $this->hasOne(Viatura::class, ['id' => 'viatura_id']);

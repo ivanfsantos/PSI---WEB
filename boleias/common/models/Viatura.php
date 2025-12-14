@@ -4,35 +4,16 @@ namespace common\models;
 
 use Yii;
 
-/**
- * This is the model class for table "viaturas".
- *
- * @property int $id
- * @property string $marca
- * @property string $modelo
- * @property string $matricula
- * @property string $cor
- * @property int $lugares_disponiveis
- * @property int $perfil_id
- *
- * @property Boleias[] $boleias
- * @property Perfis $perfil
- */
+
 class Viatura extends \yii\db\ActiveRecord
 {
 
 
-    /**
-     * {@inheritdoc}
-     */
     public static function tableName()
     {
         return 'viaturas';
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function rules()
     {
         return [
@@ -46,9 +27,6 @@ class Viatura extends \yii\db\ActiveRecord
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function attributeLabels()
     {
         return [
@@ -61,21 +39,11 @@ class Viatura extends \yii\db\ActiveRecord
         ];
     }
 
-    /**
-     * Gets query for [[Boleias]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
     public function getBoleias()
     {
         return $this->hasMany(Boleia::class, ['viatura_id' => 'id']);
     }
 
-    /**
-     * Gets query for [[Perfil]].
-     *
-     * @return \yii\db\ActiveQuery
-     */
     public function getPerfil()
     {
         return $this->hasOne(Perfil::class, ['id' => 'perfil_id']);

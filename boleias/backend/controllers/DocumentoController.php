@@ -2,27 +2,17 @@
 
 namespace backend\controllers;
 
-use Cassandra\Exception\AlreadyExistsException;
 use common\models\Documento;
-use common\models\Perfil;
-use common\models\UploadDocumentoCarta;
-use common\models\UploadDocumentoCartao;
-use frontend\models\DocumentoSearch;
+use common\models\DocumentoSearch;
 use yii\filters\AccessControl;
-use yii\web\BadRequestHttpException;
+use yii\filters\VerbFilter;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
-use yii\filters\VerbFilter;
-use yii\web\UploadedFile;
 
-/**
- * DocumentoController implements the CRUD actions for Documento model.
- */
+
 class DocumentoController extends Controller
 {
-    /**
-     * @inheritDoc
-     */
+
     public function behaviors()
     {
         return array_merge(

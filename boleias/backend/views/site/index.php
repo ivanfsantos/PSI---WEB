@@ -39,6 +39,48 @@ $nome = ($user && $user->perfil && $user->perfil->nome) ? $user->perfil->nome : 
             <p>Users Registados: <?php echo $qtdUsersRegisto; ?></p>
         </a>
     </div>
+
+
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-4 text-center">
+            <a href="<?= Yii::$app->urlManager->createUrl(['avaliacao/index']) ?>" class="card p-5 shadow-sm mx-auto d-block">
+                <i class="fas fa-star fa-6x mb-3 text-warning"></i>
+                <h3>Avaliações</h3>
+                <p>Avaliações feitas: <?php echo $qtdAvaliacoes; ?></p>            </a>
+        </div>
+    </div>
+
+    <style>
+        .card {
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            transition: transform 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::after {
+            content: '';
+            position: absolute;
+            bottom: -20px; /* empurra para fora da base */
+            left: 50%;
+            transform: translateX(-50%) rotate(45deg); /* cria o triângulo invertido */
+            width: 40px;
+            height: 40px;
+            background: #f8f9fa;
+            border-left: 1px solid #ddd;
+            border-bottom: 1px solid #ddd;
+            z-index: 0;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+    </style>
+
 </div>
 
 <style>

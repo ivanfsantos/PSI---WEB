@@ -4,48 +4,28 @@ namespace common\models;
 
 use Yii;
 
-/**
- * This is the model class for table "destinos_favoritos".
- *
- * @property int $id
- * @property int $perfil_id
- * @property int $boleia_id
- *
- * @property Perfil $perfil
- * @property Boleia $boleia
- */
+
 class DestinoFavorito extends \yii\db\ActiveRecord
 {
-    /**
-     * {@inheritdoc}
-     */
+
     public static function tableName()
     {
         return 'destinos_favoritos';
     }
 
-    /**
-     * Garante que o ActiveRecord reconhece todas as colunas,
-     * mesmo que tenham sido adicionadas depois por migrações.
-     */
+
     public function attributes()
     {
         return array_merge(parent::attributes(), ['perfil_id', 'boleia_id']);
     }
 
-    /**
-     * {@inheritdoc}
-     */
+
     public function rules()
     {
         return [
-            // Ambos obrigatórios
             [['perfil_id', 'boleia_id'], 'required'],
-
-            // Têm de ser inteiros
             [['perfil_id', 'boleia_id'], 'integer'],
 
-            // FK perfil
             [
                 ['perfil_id'],
                 'exist',
@@ -54,7 +34,6 @@ class DestinoFavorito extends \yii\db\ActiveRecord
                 'targetAttribute' => ['perfil_id' => 'id']
             ],
 
-            // FK boleia
             [
                 ['boleia_id'],
                 'exist',
@@ -65,9 +44,6 @@ class DestinoFavorito extends \yii\db\ActiveRecord
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function attributeLabels()
     {
         return [
@@ -77,17 +53,11 @@ class DestinoFavorito extends \yii\db\ActiveRecord
         ];
     }
 
-    /**
-     * Relação com Perfil
-     */
     public function getPerfil()
     {
         return $this->hasOne(Perfil::class, ['id' => 'perfil_id']);
     }
 
-    /**
-     * Relação com Boleia
-     */
     public function getBoleia()
     {
         return $this->hasOne(Boleia::class, ['id' => 'boleia_id']);

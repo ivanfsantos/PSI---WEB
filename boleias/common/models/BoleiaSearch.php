@@ -6,14 +6,10 @@ use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use common\models\Boleia;
 
-/**
- * BoleiaSearch represents the model behind the search form of `common\models\Boleia`.
- */
+
 class BoleiaSearch extends Boleia
 {
-    /**
-     * {@inheritdoc}
-     */
+
     public function rules()
     {
         return [
@@ -22,23 +18,12 @@ class BoleiaSearch extends Boleia
         ];
     }
 
-    /**
-     * {@inheritdoc}
-     */
+
     public function scenarios()
     {
-        // bypass scenarios() implementation in the parent class
         return Model::scenarios();
     }
 
-    /**
-     * Creates data provider instance with search query applied
-     *
-     * @param array $params
-     * @param string|null $formName Form name to be used into `->load()` method.
-     *
-     * @return ActiveDataProvider
-     */
 
         public function search($params, $formName = null)
     {
@@ -46,7 +31,6 @@ class BoleiaSearch extends Boleia
 
         $query = Boleia::find();
 
-        // Só adiciona o join se o perfil existir
         if ($perfil) {
             $query->joinWith(['destinosFavoritos' => function (\yii\db\ActiveQuery $query) use ($perfil) {
                 $query->on('destinos_favoritos.perfil_id = :perfil_id', [':perfil_id' => $perfil->id]);
@@ -63,7 +47,6 @@ class BoleiaSearch extends Boleia
             return $dataProvider;
         }
 
-        // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
             'data_hora' => $this->data_hora,

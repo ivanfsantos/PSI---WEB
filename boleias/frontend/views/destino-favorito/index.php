@@ -89,7 +89,6 @@ $this->params['breadcrumbs'][] = $this->title;
                                     [
                                         'class' => 'btn btn-success btn-sm',
                                         'title' => 'Criar reserva',
-                                        'data' => ['method' => 'post'],
                                     ]
                                 );
                             } else {
