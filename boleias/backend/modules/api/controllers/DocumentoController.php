@@ -2,7 +2,7 @@
 namespace backend\modules\api\controllers;
 
 use yii\rest\ActiveController;
-class DocumentoController extends ActiveController
+class DocumentoController extends ApiController
 {
     public $modelClass = 'common\models\Documento';
 

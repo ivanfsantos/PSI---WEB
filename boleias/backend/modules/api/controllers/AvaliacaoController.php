@@ -2,7 +2,7 @@
 namespace backend\modules\api\controllers;
 
 use yii\rest\ActiveController;
-class AvaliacaoController extends ActiveController
+class AvaliacaoController extends ApiController
 {
     public $modelClass = 'common\models\Avaliacao';
 

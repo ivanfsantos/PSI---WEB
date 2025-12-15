@@ -2,7 +2,7 @@
 namespace backend\modules\api\controllers;
 
 use yii\rest\ActiveController;
-class UserController extends ActiveController
+class UserController extends ApiController
 {
     public $modelClass = 'common\models\User';
 

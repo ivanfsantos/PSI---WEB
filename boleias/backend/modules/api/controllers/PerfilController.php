@@ -2,7 +2,7 @@
 namespace backend\modules\api\controllers;
 
 use yii\rest\ActiveController;
-class PerfilController extends ActiveController
+class PerfilController extends ApiController
 {
     public $modelClass = 'common\models\Perfil';
 

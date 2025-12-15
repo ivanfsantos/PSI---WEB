@@ -2,7 +2,7 @@
 namespace backend\modules\api\controllers;
 
 use yii\rest\ActiveController;
-class ViaturaController extends ActiveController
+class ViaturaController extends ApiController
 {
     public $modelClass = 'common\models\Viatura';
 

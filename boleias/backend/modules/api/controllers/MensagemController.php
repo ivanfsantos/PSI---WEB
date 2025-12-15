@@ -2,7 +2,7 @@
 namespace backend\modules\api\controllers;
 
 use yii\rest\ActiveController;
-class MensagemController extends ActiveController
+class MensagemController extends ApiController
 {
     public $modelClass = 'common\models\Mensagem';
 
