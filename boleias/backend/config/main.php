@@ -43,7 +43,7 @@ return [
         ],
         'urlManager' => [
             'enablePrettyUrl' => true,
-            'showScriptName' => false,
+            //'showScriptName' => false,
             'rules' => [
                 [
                     'class' => 'yii\rest\UrlRule',
@@ -57,25 +57,25 @@ return [
                         'api/boleia',
                         'api/avaliacao',
                     ],
+                    'extraPatterns' => [
+                        'GET count' => 'count', // 'count' é 'actionCount' e serve para contar os registos de cada modelo
+                        'GET usernames' => 'nomes', // 'usernames' é 'actionUsernames' e serve para mostrar todos os usernames registados
+                        'GET emails' => 'emails', // 'emails' é 'actionEmails' e serve para mostrar todos os emails registados
+                        'GET marcas' => 'marcas', // 'marcas' é 'actionMarcas' e serve para mostrar todas as marcas registadas
+                        'GET modelos' => 'modelos', // 'modelos' é 'actionModelos' e serve para mostrar todos os modelos registados
+                        'GET matriculas' => 'matriculas', // 'matriculas' é 'actionMatriculas' e serve para mostrar todas as matriculas registadas
+                        'GET cores' => 'cores', // 'cores' é 'actionCores' e serve para mostrar todas as cores registadas
+                        'GET lugaresdisponiveis' => 'lugaresdisponiveis', // 'lugaresdisponiveis' é 'actionLugaresdisponiveis' e serve para mostrar todos os lugares disponíveis registados
+                        'GET nomes' => 'nomes', // 'nomes' é 'actionNomes' e serve para mostrar todos os nomes registados
+                        'GET telefones' => 'telefones', // 'telefones' é 'actionTelefones' e serve para mostrar todos os numeros de telefone registadas
+                        'GET moradas' => 'moradas', // 'moradas' é 'actionMoradas' e serve para mostrar todas as moradas registadas
+                        'GET generos' => 'generos', // 'generos' é 'actionGeneros' e serve para mostrar todos os generos registados
+                        'GET datasnascimentos' => 'datasnascimentos', // 'datasnascimentos' é 'actionDatasnascimento' e serve para mostrar todas as datas de nascimento registadas
+                        'GET mensagens' => 'mensagens', // 'mensagens' é 'actionMessagens' e serve para mostrar todas as mensagens registadas
+                    ],
                 ],
             ],
         ],
-        /*
-        'urlManager' => [
-            'enablePrettyUrl' => true,
-            'showScriptName' => false,
-            'rules' => [
-                ['class' => 'yii\rest\UrlRule','controller' => 'api/user'],
-                ['class' => 'yii\rest\UrlRule','controller' => 'api/viatura'],
-                ['class' => 'yii\rest\UrlRule','controller' => 'api/reserva'],
-                ['class' => 'yii\rest\UrlRule','controller' => 'api/perfil'],
-                ['class' => 'yii\rest\UrlRule','controller' => 'api/documento'],
-                ['class' => 'yii\rest\UrlRule','controller' => 'api/destinofavorito'],
-                ['class' => 'yii\rest\UrlRule','controller' => 'api/boleia'],
-                ['class' => 'yii\rest\UrlRule','controller' => 'api/avaliacao'],
-            ],
-        ],
-        */
     ],
     'params' => $params,
 ];
