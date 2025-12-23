@@ -35,10 +35,11 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="card-header bg-primary text-white">Carta de Condução</div>
                 <div class="card-body text-center">
                     <?php
-                    $cartaPath = '../../frontend/web/uploads/' . $model->carta_conducao;
-                    if ($model->carta_conducao && file_exists($cartaPath)) {
-                        $time = filemtime($cartaPath);
-                        echo '<img src="' . $cartaPath . '?v=' . $time . '" alt="Carta de Condução" class="img-fluid rounded" style="max-height:350px; border:1px solid #ddd;">';
+                    $frontendBaseUrl = Yii::$app->params['frontendBaseUrl'];
+                    $cartaUploadsPath = Yii::getAlias('@frontend') . '/web/uploads/' . $model->carta_conducao;
+                    if ($model->carta_conducao && file_exists($cartaUploadsPath)) {
+                        $time = filemtime($cartaUploadsPath);
+                        echo '<img src="' . $frontendBaseUrl . '/uploads/' . $model->carta_conducao . '?v=' . $time . '" alt="Carta de Condução" class="img-fluid rounded" style="max-height:350px; border:1px solid #ddd;">';
                     } else {
                         echo '<p class="text-muted">Nenhuma imagem enviada.</p>';
                     }
@@ -53,10 +54,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 <div class="card-header bg-secondary text-white">Cartão de Cidadão</div>
                 <div class="card-body text-center">
                     <?php
-                    $cartaoPath = '../../frontend/web/uploads/' . $model->cartao_cidadao;
-                    if ($model->cartao_cidadao && file_exists($cartaoPath)) {
-                        $time = filemtime($cartaoPath);
-                        echo '<img src="' . $cartaoPath . '?v=' . $time . '" alt="Cartão de Cidadão" class="img-fluid rounded" style="max-height:350px; border:1px solid #ddd;">';
+                    $cartaoUploadsPath = Yii::getAlias('@frontend') . '/web/uploads/' . $model->cartao_cidadao;
+                    if ($model->cartao_cidadao && file_exists($cartaoUploadsPath)) {
+                        $time = filemtime($cartaoUploadsPath);
+                        echo '<img src="' . $frontendBaseUrl . '/uploads/' . $model->cartao_cidadao . '?v=' . $time . '" alt="Cartão de Cidadão" class="img-fluid rounded" style="max-height:350px; border:1px solid #ddd;">';
                     } else {
                         echo '<p class="text-muted">Nenhuma imagem enviada.</p>';
                     }

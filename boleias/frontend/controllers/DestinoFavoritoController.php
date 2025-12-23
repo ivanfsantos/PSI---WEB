@@ -66,12 +66,17 @@ class DestinoFavoritoController extends Controller
         ]);
     }
 
+
+
+
+
     public function actionCreate($boleia_id)
     {
         $perfil = Perfil::findOne(['user_id' => Yii::$app->user->id]);
         if (!$perfil) {
             throw new NotFoundHttpException('Perfil nao encontrado');
         }
+
 
         $model = new DestinoFavorito();
         $model->perfil_id = $perfil->id;
@@ -83,13 +88,12 @@ class DestinoFavoritoController extends Controller
         ])->one();
 
         if ($existe) {
+        
             return $this->redirect(Yii::$app->request->referrer);
-        }
+             throw new ErrorException('Já existe este destino nos favoritos');
 
-        if ($model->save()) {
+        } else if($model->save()) {
             return $this->redirect(Yii::$app->request->referrer);
-        } else {
-            throw new ErrorException('Nao foi possivel adicionar a viagem á wishlist');
         }
     }
 

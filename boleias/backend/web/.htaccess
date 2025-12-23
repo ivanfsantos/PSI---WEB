@@ -1,6 +1,18 @@
 RewriteEngine On
+
+<IfModule mod_dir.c>
+    # Prevent Apache from auto-redirecting URLs with/without trailing slash
+    DirectorySlash Off
+</IfModule>
+
+# Map API POSTs ending with /api/boleia or /api/boleias (with or without trailing slash)
+# to the create action internally. This preserves the HTTP method and avoids 405s.
+RewriteRule ^(.*/)?api/boleia/?$ index.php?r=api/boleia/create [L,QSA]
+RewriteRule ^(.*/)?api/boleias/?$ index.php?r=api/boleia/create [L,QSA]
+
 # If a directory or a file exists, use the request directly
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-# Otherwise forward the request to index.php
-RewriteRule . index.php
+
+# Otherwise forward the request to index.php internally, preserve query string
+RewriteRule ^ index.php [L,QSA]

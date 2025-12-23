@@ -55,13 +55,13 @@ class Boleia extends \yii\db\ActiveRecord
     public function getViatura()
     {
         return $this->hasOne(Viatura::class, ['id' => 'viatura_id']);
-
-
     }
 
     public function isFechada()
     {
         return $this->getReservas()->andWhere(['estado' => 'pago'])->exists();
     }
+    
+
 
 }

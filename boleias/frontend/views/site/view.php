@@ -42,7 +42,6 @@ $this->params['breadcrumbs'][] = $this->title;
                     ],
                     [
                         'attribute' => 'preco',
-                        'format' => ['currency'],
                     ],
                     [
                         'label' => 'Lugares Disponíveis',
