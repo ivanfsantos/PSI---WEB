@@ -13,6 +13,8 @@ class BoleiaController extends Controller
 
     //post de boleias
     //http://localhost/PROJETOS/boleias/web/PSI-WEB/boleias/backend/web/api/boleia
+
+    
     public function actionCreate()
     {
 
@@ -147,6 +149,7 @@ class BoleiaController extends Controller
 
     //put boleia por id
     //http://localhost/PROJETOS/boleias/web/PSI-WEB/boleias/backend/web/api/boleia/?id=numero
+
     public function actionUpdate(){
 
         $id = Yii::$app->request->get('id');

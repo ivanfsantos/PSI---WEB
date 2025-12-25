@@ -118,6 +118,10 @@ class ReservaController extends Controller
         return $this->redirect(['reservas', 'id' => $id]);
     }
 
+
+
+    
+
     public function actionView($id)
     {
         return $this->render('view', [
