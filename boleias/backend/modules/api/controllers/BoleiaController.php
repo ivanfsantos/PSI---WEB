@@ -3,13 +3,22 @@
 namespace backend\modules\api\controllers;
 
 use Yii;
-use yii\filters\auth\HttpBasicAuth;
 use yii\rest\Controller;
 use yii\web\UnauthorizedHttpException;
 use common\models\Boleia;
+use yii\filters\auth\HttpBearerAuth;
 
 class BoleiaController extends Controller
 {
+
+    public function behaviors()
+    {
+        $behaviors = parent::behaviors();
+        $behaviors['authenticator'] = [
+            'class' => HttpBearerAuth::class,
+        ];
+        return $behaviors;
+    }
 
     //post de boleias
     //http://localhost/PROJETOS/boleias/web/PSI-WEB/boleias/backend/web/api/boleia

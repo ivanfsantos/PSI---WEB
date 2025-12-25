@@ -3,7 +3,7 @@
 namespace backend\modules\api\controllers;
 
 use Yii;
-use yii\filters\auth\HttpBasicAuth;
+use yii\filters\auth\HttpBearerAuth;
 use yii\rest\Controller;
 use yii\web\UnauthorizedHttpException;
 use common\models\Reserva;
@@ -12,6 +12,14 @@ use common\models\Boleia;
 class ReservaController extends Controller
 {
 
+    public function behaviors()
+    {
+        $behaviors = parent::behaviors();
+        $behaviors['authenticator'] = [
+            'class' => HttpBearerAuth::class,
+        ];
+        return $behaviors;
+    }
 
 
 

@@ -3,7 +3,7 @@
 namespace backend\modules\api\controllers;
 
 use Yii;
-use yii\filters\auth\HttpBasicAuth;
+use yii\filters\auth\HttpBearerAuth;
 use yii\rest\Controller;
 use yii\web\UnauthorizedHttpException;
 use common\models\Viatura;
@@ -11,6 +11,15 @@ use common\models\Perfil;
 
 class ViaturaController extends Controller
 {
+
+    public function behaviors()
+    {
+        $behaviors = parent::behaviors();
+        $behaviors['authenticator'] = [
+            'class' => HttpBearerAuth::class,
+        ];
+        return $behaviors;
+    }
 
     //post de viaturas
     //http://localhost/PROJETOS/boleias/web/PSI-WEB/boleias/backend/web/api/viatura
