@@ -31,7 +31,7 @@ $this->title = 'Login';
 
         <div class="form-group">
             <p> 
-                <a href="<?= Url::to(['../../frontend/web/site/index']) ?>" class="btn btn-primary">Frontend</a>
+                <a href="<?= Yii::$app->params['frontendBaseUrl'] . '/index.php?r=site/login' ?>" class="btn btn-primary">Frontend</a>
 
             </p>
         </div>

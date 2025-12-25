@@ -21,7 +21,7 @@ $this->beginPage();
 
     <!-- CSS Files -->
     <link rel="stylesheet" href="htmlcodex/css/bootstrap.min.css">
-    <link rel="stylesheet" href="web/css/site.css">
+    <link rel="stylesheet" href="<?= Url::to('@web/css/site.css') ?>">
 
     <?php $this->head() ?>
 </head>
@@ -50,7 +50,7 @@ $this->beginPage();
             <a href="<?= Url::to(['/user/index']) ?>" class="nav-item nav-link">Users</a>
             <a href="<?= Url::to(['/documento/index']) ?>" class="nav-item nav-link">Docs</a>
             <a href="<?= Url::to(['/avaliacao/index']) ?>" class="nav-item nav-link">Avaliações</a>
-            <a href="<?= Url::to(['../../frontend/web/site/index']) ?>" class="nav-item nav-link">Frontend</a>
+            <a href="<?= Yii::$app->params['frontendBaseUrl'] . '/index.php?r=site/index' ?>" class="nav-item nav-link">Frontend</a>
 
 
 

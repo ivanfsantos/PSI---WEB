@@ -58,9 +58,11 @@ class ReservaController extends Controller
             'dataProvider' => $dataProvider,
         ]);
     }
-
+    
+    
     public function actionReservas($id)
     {
+        
         $boleia = Boleia::findOne($id);
         if (!$boleia) {
             Yii::$app->session->setFlash('error', 'Boleia não encontrada!');
@@ -74,6 +76,7 @@ class ReservaController extends Controller
         }
 
         $query = Reserva::find()->where(['boleia_id' => $id]);
+
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
             'pagination' => ['pageSize' => 20],
@@ -85,6 +88,8 @@ class ReservaController extends Controller
         ]);
     }
 
+
+
     public function actionValidar($id)
     {
         $reservas = Reserva::find()->where(['boleia_id' => $id, 'estado' => 'Pendente'])->all();
@@ -93,13 +98,13 @@ class ReservaController extends Controller
             return $this->redirect(['reservas', 'id' => $id]);
         }
 
-        $boleia = $reservas[0]->boleia;
+        $boleia = Boleia::findOne($id);
         if (!$boleia) {
             Yii::$app->session->setFlash('error', 'Boleia não encontrada!');
-            return $this->redirect(['reservas', 'id' => $id]);
+            return $this->redirect(['site/index']);
         }
-
-        $totalPassageiros = Reserva::find()->where(['boleia_id' => $id])->count();
+        
+        $totalPassageiros = count($reservas);
         $precoTotal = $boleia->preco;
 
         foreach ($reservas as $reserva) {
@@ -112,6 +117,10 @@ class ReservaController extends Controller
         Yii::$app->session->setFlash('success', 'Todas as reservas foram validadas e os reembolsos calculados com sucesso!');
         return $this->redirect(['reservas', 'id' => $id]);
     }
+
+
+
+    
 
     public function actionView($id)
     {

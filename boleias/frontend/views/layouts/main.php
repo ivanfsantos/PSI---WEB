@@ -23,7 +23,7 @@ $this->beginPage();
 
 
     <link rel="stylesheet" href="htmlcodex/css/bootstrap.min.css">
-    <link rel="stylesheet" href="web/css/site.css">
+    <link rel="stylesheet" href="<?= Url::to('@web/css/site.css') ?>">
 
     <?php $this->head() ?>
 </head>
@@ -54,10 +54,10 @@ $this->beginPage();
 
             <a href="<?= Url::to(['/reserva/index','id' => Yii::$app->user->id]) ?>" class="nav-item nav-link">Reservas</a>
             <a href="<?= Url::to(['/destino-favorito/index','id' => Yii::$app->user->id]) ?>" class="nav-item nav-link">Watchlist</a>
-                <a href="<?= Url::to(['/condutor-favorito/index','id' => Yii::$app->user->id]) ?>" class="nav-item nav-link">Condutores</a>
+            <a href="<?= Url::to(['/condutor-favorito/index','id' => Yii::$app->user->id]) ?>" class="nav-item nav-link">Condutores</a>
 
             <?php if (\Yii::$app->user->can('acederBackend')) { ?>
-              <a href="<?= Url::to(['../../backend/web/site/login']) ?>" class="nav-item nav-link">Backend</a>
+              <a href="<?= Yii::$app->params['backendBaseUrl'] . '/index.php?r=site/login' ?>" class="nav-item nav-link">Backend</a>
             <?php } ?>
 
         </div>
