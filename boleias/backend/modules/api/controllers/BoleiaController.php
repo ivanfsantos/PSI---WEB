@@ -6,19 +6,20 @@ use Yii;
 use yii\rest\Controller;
 use yii\web\UnauthorizedHttpException;
 use common\models\Boleia;
-use yii\filters\auth\HttpBearerAuth;
+use yii\filters\auth\QueryParamAuth;
 
 class BoleiaController extends Controller
 {
 
-    public function behaviors()
-    {
-        $behaviors = parent::behaviors();
-        $behaviors['authenticator'] = [
-            'class' => HttpBearerAuth::class,
-        ];
-        return $behaviors;
-    }
+      public function behaviors()
+{
+    $behaviors = parent::behaviors();
+    $behaviors['authenticator'] = [
+        'class' => QueryParamAuth::class,
+        'tokenParam' => 'access-token',
+    ];
+    return $behaviors;
+}
 
     //post de boleias
     //http://localhost/PROJETOS/boleias/web/PSI-WEB/boleias/backend/web/api/boleia

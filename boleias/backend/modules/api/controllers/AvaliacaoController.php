@@ -3,7 +3,7 @@
 namespace backend\modules\api\controllers;
 
 use Yii;
-use yii\filters\auth\HttpBearerAuth;
+use yii\filters\auth\QueryParamAuth;
 use yii\rest\Controller;
 use yii\web\UnauthorizedHttpException;
 use common\models\Perfil;
@@ -12,14 +12,15 @@ use common\models\Avaliacao;
 class AvaliacaoController extends Controller
 {   
 
-    public function behaviors()
-    {
-        $behaviors = parent::behaviors();
-        $behaviors['authenticator'] = [
-            'class' => HttpBearerAuth::class,
-        ];
-        return $behaviors;
-    }
+      public function behaviors()
+{
+    $behaviors = parent::behaviors();
+    $behaviors['authenticator'] = [
+        'class' => QueryParamAuth::class,
+        'tokenParam' => 'access-token',
+    ];
+    return $behaviors;
+}
 
     //post de avaliacoes
     //http://localhost/PROJETOS/boleias/web/PSI-WEB/boleias/backend/web/api/avaliacao
