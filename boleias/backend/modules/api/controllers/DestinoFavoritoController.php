@@ -3,7 +3,7 @@
 namespace backend\modules\api\controllers;
 
 use Yii;
-use yii\filters\auth\HttpBearerAuth;
+use yii\filters\auth\QueryParamAuth;
 use yii\rest\Controller;
 use yii\web\UnauthorizedHttpException;
 use common\models\DestinoFavorito;
@@ -13,14 +13,15 @@ class DestinoFavoritoController extends Controller
 {
 
 
-    public function behaviors()
-    {
-        $behaviors = parent::behaviors();
-        $behaviors['authenticator'] = [
-            'class' => HttpBearerAuth::class,
-        ];
-        return $behaviors;
-    }
+      public function behaviors()
+{
+    $behaviors = parent::behaviors();
+    $behaviors['authenticator'] = [
+        'class' => QueryParamAuth::class,
+        'tokenParam' => 'access-token',
+    ];
+    return $behaviors;
+}
 
 
     //post de destinos favoritos

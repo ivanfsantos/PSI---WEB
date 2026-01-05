@@ -3,7 +3,7 @@
 namespace backend\modules\api\controllers;
 
 use Yii;
-use yii\filters\auth\HttpBearerAuth;
+use yii\filters\auth\QueryParamAuth;
 use yii\rest\Controller;
 use yii\web\UnauthorizedHttpException;
 use common\models\Reserva;
@@ -12,14 +12,15 @@ use common\models\Boleia;
 class ReservaController extends Controller
 {
 
-    public function behaviors()
-    {
-        $behaviors = parent::behaviors();
-        $behaviors['authenticator'] = [
-            'class' => HttpBearerAuth::class,
-        ];
-        return $behaviors;
-    }
+      public function behaviors()
+{
+    $behaviors = parent::behaviors();
+    $behaviors['authenticator'] = [
+        'class' => QueryParamAuth::class,
+        'tokenParam' => 'access-token',
+    ];
+    return $behaviors;
+}
 
 
 
@@ -75,12 +76,14 @@ class ReservaController extends Controller
             return [
                 'success' => true,
                 'message' => 'Reserva criada com sucesso',
+                'data' => $reserva
             ];
         } else {
             Yii::$app->response->statusCode = 500;
             return [
                 'success' => false,
                 'message' => 'Erro ao criar a reserva',
+                
             ];
         }
     }

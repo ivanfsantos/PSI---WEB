@@ -62,7 +62,7 @@ class Avaliacao extends \yii\db\ActiveRecord
     {
         file_put_contents("C:/wamp64/www/mqtt_debug.txt", "CHAMADO\n", FILE_APPEND);
 
-            $mqtt = new phpMQTT("172.22.21.244", 1883, "avaliacao-" . uniqid());
+            $mqtt = new phpMQTT("127.0.0.1", 1883, "avaliacao-" . uniqid());
 
         if ($mqtt->connect(true, NULL, "", "")) {
             file_put_contents("C:/wamp64/www/mqtt_debug.txt", "CONECTADO\n", FILE_APPEND);

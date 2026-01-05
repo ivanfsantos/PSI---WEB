@@ -106,6 +106,13 @@ class PerfilController extends Controller
         $model = $this->findModel($id);
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+            $auth = Yii::$app->authManager;
+            $auth->revokeAll($model->user_id);
+            $roleName = $model->condutor ? 'condutor' : 'passageiro';
+            $role = $auth->getRole($roleName);
+            if ($role) {
+                $auth->assign($role, $model->user_id);
+            }
             return $this->redirect(['view', 'id' => $model->id]);
         }
 
