@@ -76,12 +76,14 @@ class ReservaController extends Controller
             return [
                 'success' => true,
                 'message' => 'Reserva criada com sucesso',
+                'data' => $reserva
             ];
         } else {
             Yii::$app->response->statusCode = 500;
             return [
                 'success' => false,
                 'message' => 'Erro ao criar a reserva',
+                
             ];
         }
     }

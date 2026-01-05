@@ -93,7 +93,9 @@ class BoleiaController extends Controller
     public function actionIndex(){
 
         $boleias = Boleia::find()->all();
-        $boleiasFechadas = Boleia::find()->where(['fechada' => 0])->all();
+         $boleiasFechadas = array_filter($boleias, function($boleia) {
+        return $boleia->isFechada(); 
+    });
 
         return [
             'success' => true,
