@@ -51,6 +51,7 @@ $this->beginPage();
             <a href="<?= Url::to(['/documento/index']) ?>" class="nav-item nav-link">Docs</a>
             <a href="<?= Url::to(['/avaliacao/index']) ?>" class="nav-item nav-link">Avaliações</a>
             <a href="<?= Yii::$app->params['frontendBaseUrl'] . '/index.php?r=site/index' ?>" class="nav-item nav-link">Frontend</a>
+            <a href="<?= Url::to(['/tarefa/index']) ?>" class="nav-item nav-link">Tarefas</a>
 
 
 

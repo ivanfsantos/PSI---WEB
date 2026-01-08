@@ -182,6 +182,15 @@ class RbacController extends Controller
         $acederViatura->description = 'Aceder ás viaturas';
         $auth->add($acederViatura);
 
+        //Teste Prático
+
+        $acederTarefas = $auth->createPermission('acederTarefas');
+        $acederTarefas->description = 'Aceder aos tarefas';
+        $auth->add($acederTarefas);
+
+        $confirmarTarefas = $auth->createPermission('confirmarTarefas');
+        $confirmarTarefas->description = 'Confirmar aos tarefas';
+        $auth->add($confirmarTarefas);
 
 
         // ====== Definir Papéis =====
@@ -208,6 +217,7 @@ class RbacController extends Controller
         $auth->addChild($passageiro, $eliminarPassageiro);
         $auth->addChild($passageiro, $acederBoleia);
         $auth->addChild($passageiro, $verMinhasReservas);
+        $auth->addChild($passageiro, $confirmarTarefas);
 
 
 
@@ -249,6 +259,7 @@ class RbacController extends Controller
         $auth->addChild($admin , $eliminarAdmin);
         $auth->addChild($admin , $acederBoleia);
         $auth->addChild($admin , $acederBackend);
+        $auth->addChild($admin , $acederTarefas);
 
         // ==== Atribuir Papéis a Utilizadores ====
 

@@ -29,6 +29,16 @@ class UserController extends Controller
                         'allow' => true,
                         'roles' => ['acederBackend'],
                     ],
+                    [
+                        'allow' => true,
+                        'roles' => ['admin'],
+                        'actions' => ['create','update','delete','index'],
+                    ],
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                        'actions' => ['my-tasks','confirm'],
+                    ],
 
                 ],
             ]
@@ -116,4 +126,12 @@ class UserController extends Controller
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
+
+    public function getRoleName()
+    {
+        $roles = Yii::$app->authManager->getRolesByUser($this->id);
+        return !empty($roles) ? array_key_first($roles) : 'sem role';
+    }
+
+
 }
