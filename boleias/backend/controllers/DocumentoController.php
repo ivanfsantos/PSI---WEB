@@ -25,7 +25,7 @@ class DocumentoController extends Controller
                         [
                             'actions' => ['index','create'],
                             'allow' => true,
-                            'roles' => ['acederDocumento'],
+                            'roles' => ['acederBackend'],
                         ],
                     ],
                 ],
