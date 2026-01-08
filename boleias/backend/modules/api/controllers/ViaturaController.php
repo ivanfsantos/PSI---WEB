@@ -87,11 +87,25 @@ class ViaturaController extends Controller
 
     }
 
+    //get todas as viaturas
+    //http://localhost/PROJETOS/boleias/web/PSI-WEB/boleias/backend/web/api/viatura
+
+    public function actionIndex()
+    {
+        $viaturas = Viatura::find()->all();
+
+    return [
+        'success' => true,
+        'data' => $viaturas,
+    ];
+    }
+
+
     //get todas as viaturas de um perfil
     //http://localhost/PROJETOS/boleias/web/PSI-WEB/boleias/backend/web/api/viatura/?perfil_id=numero
 
 
-    public function actionIndex()
+    public function actionIndexPerfil()
     {
         $perfil_id = Yii::$app->request->get('perfil_id');
 
