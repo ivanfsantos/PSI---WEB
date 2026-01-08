@@ -3,7 +3,7 @@ actor: UnitTester
 modules:
     enabled:
         - Db:
-              dsn: 'mysql:host=localhost;dbname=bdboleiasteste'
+              dsn: 'mysql:host=localhost;dbname=teste_pratico_teste'
               user: 'root'
               password: ''
         - Yii2:
