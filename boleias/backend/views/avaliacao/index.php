@@ -18,7 +18,6 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
         'summary' => '',
         'tableOptions' => ['class' => 'table table-hover align-middle'],
         'columns' => [
@@ -39,7 +38,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'class' => ActionColumn::className(),
                 'header' => 'Ações',
-                'template' => '{delete}', // apenas esses dois botões
+                'template' => '{delete}', 
                 'urlCreator' => function ($action, Avaliacao $model, $key, $index, $column) {
                     return Url::toRoute([$action, 'id' => $model->id]);
                 },

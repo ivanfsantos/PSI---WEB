@@ -73,19 +73,15 @@ $this->params['breadcrumbs'][] = $this->title;
                     'urlCreator' => function ($action, Perfil $model, $key, $index, $column) {
                         return Url::toRoute([$action, 'id' => $model->id]);
                     },
-                    // Add spaces between the actions here
                     'template' => '{view} {update} {delete} {documentos}',
                     'buttons' => [
                         'view' => function ($url) {
-                            // View button with 'info' color and icon
                             return Html::a('<i class="bi bi-eye">Ver</i>', $url, ['class' => 'btn btn-info btn-sm', 'title' => 'View']);
                         },
                         'update' => function ($url) {
-                            // Update button with 'primary' color and icon
                             return Html::a('<i class="bi bi-pencil">Editar</i>', $url, ['class' => 'btn btn-primary btn-sm', 'title' => 'Update']);
                         },
                         'delete' => function ($url) {
-                            // Delete button with 'danger' color and icon
                             return Html::a('<i class="bi bi-trash">Delete</i>', $url, [
                                 'class' => 'btn btn-danger btn-sm',
                                 'title' => 'Delete',
@@ -95,10 +91,9 @@ $this->params['breadcrumbs'][] = $this->title;
                         },
                         'documentos' => function ($url, $model, $key) {
                             if(Yii::$app->user->can('acederViatura')){
-                                // Docs button with 'secondary' color and icon
                                 return Html::a('<i class="bi bi-archive"></i> Docs', Url::toRoute(['documento/index', 'id' => $model->id]), ['class' => 'btn btn-secondary btn-sm', 'title' => 'Manage Documents']);
                             }
-                            return ''; // Return empty string if user cannot access
+                            return ''; 
                         }
                     ]
                 ],

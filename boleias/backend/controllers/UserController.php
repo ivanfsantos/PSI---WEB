@@ -5,6 +5,7 @@ namespace backend\controllers;
 use common\models\SignupAdmin;
 use common\models\User;
 use common\models\UserSearch;
+use common\models\Avaliacao;
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -54,6 +55,32 @@ class UserController extends Controller
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
+    }
+
+
+
+    public function actionPerfil($id)
+    {
+        $model = $this->findModel($id);
+        $perfil = $model->perfil;
+        $avaliacoes = Avaliacao::find()->where(['perfil_id' => $perfil->id])->all();
+
+        return $this->render('perfil', [
+            'model' => $this->findModel($id),
+            'avaliacoes' => $avaliacoes,
+        ]);
+    }
+
+    public function actionAvaliacaoDelete($id)
+    {
+        $avaliacao = \common\models\Avaliacao::findOne($id);
+
+        if ($avaliacao) {
+            $userId = $avaliacao->perfil->user_id;
+            $avaliacao->delete();
+            return $this->redirect(['perfil', 'id' => $userId]);
+        }
+            return $this->redirect(['index']);
     }
 
 

@@ -33,6 +33,10 @@ class User extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
+            [['username'], 'required'],
+            [['username'], 'string', 'max' => 255],
+            [['username'], 'unique', 'message' => 'Já existe uma conta com este username.'],
+
             ['status', 'default', 'value' => self::STATUS_INACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_INACTIVE, self::STATUS_DELETED]],
         ];

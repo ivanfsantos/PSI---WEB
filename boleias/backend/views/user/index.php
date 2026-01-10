@@ -24,12 +24,12 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
-        'summary' => '', // Add this line to hide the summary text
+        'summary' => '',
         'columns' => [
             'username',
             [
                 'class' => ActionColumn::className(),
-                'template' => '{view} {update} {toggle-status}',
+                'template' => '{view} {update} {avaliacoes} {toggle-status}',
                 'urlCreator' => function ($action, User $model, $key, $index, $column) {
                     return Url::toRoute([$action, 'id' => $model->id]);
                 },
@@ -41,6 +41,17 @@ $this->params['breadcrumbs'][] = $this->title;
                             ['class' => 'btn btn-info btn-sm']
                         );
                     },
+                    'avaliacoes' => function ($url, $model, $key) {
+
+                    if ($model->perfil !== null) {
+                        return Html::a(
+                            '<i class="bi bi-star"></i> Gerir Avaliações',
+                            ['user/perfil', 'id' => $model->id],
+                            ['class' => 'btn btn-success btn-sm']
+                        );
+                    }
+                        
+                    },
                     'update' => function ($url, $model, $key) {
                         return Html::a(
                             '<i class="bi bi-pencil"></i> Editar',
@@ -50,7 +61,6 @@ $this->params['breadcrumbs'][] = $this->title;
                     },
                     'toggle-status' => function ($url, $model, $key) {
                         if ($model->status == 9) {
-                            // Reativar
                             return Html::a(
                                 '<i class="bi bi-check-circle"></i> Reativar',
                                 ['reactivate', 'id' => $model->id],
@@ -63,7 +73,6 @@ $this->params['breadcrumbs'][] = $this->title;
                                 ]
                             );
                         } else {
-                            // Desativar
                             return Html::a(
                                 '<i class="bi bi-slash-circle"></i> Desativar',
                                 ['deactivate', 'id' => $model->id],
