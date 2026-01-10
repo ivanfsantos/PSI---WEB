@@ -58,6 +58,7 @@ class AvaliacaoController extends Controller
     }
 
 
+
     protected function findModel($id)
     {
         if (($model = Avaliacao::findOne(['id' => $id])) !== null) {
