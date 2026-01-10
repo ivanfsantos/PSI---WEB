@@ -132,18 +132,16 @@ class DestinoFavoritoController extends Controller
             ];
         }
 
-        $destinos = DestinoFavorito::find()->where(['perfil_id' => $perfil_id])->all();
-        
-        foreach($destinos as $destino){
-            $destino->boleia;
-            $destino->boleia->viatura;
-        }
+         $destinos = DestinoFavorito::find()
+        ->where(['perfil_id' => $perfil_id])
+        ->with(['boleia.viatura']) 
+        ->asArray()           
+        ->all();
 
-        return [
-            'success' => true,
-            'data' => $destinos,
-            'boleia' => $destino->boleia,
-        ];
+    return [
+        'success' => true,
+        'data' => $destinos,
+    ];
     }
 
 
