@@ -83,4 +83,53 @@ class ReservaTest extends Unit
         $this->assertEquals($this->boleia->id, $reserva->boleia->id);
         $this->assertEquals($this->perfil->id, $reserva->perfil->id);
     }
+
+    public function testAtualizarReserva()
+    {
+        $reserva = new Reserva();
+        $reserva->perfil_id = $this->perfil->id;
+        $reserva->boleia_id = $this->boleia->id;
+        $reserva->ponto_encontro = 'Praça Teste';
+        $reserva->contacto = '912345678';
+        $reserva->reembolso = 0;
+
+        $this->assertTrue($reserva->save(), json_encode($reserva->errors));
+
+
+        $reserva->ponto_encontro = 'Estação Central';
+        $reserva->contacto = '987654321';
+        $reserva->reembolso = 1;
+
+        $this->assertTrue($reserva->save(), json_encode($reserva->errors));
+
+
+        $reservaAtualizada = Reserva::findOne($reserva->id);
+
+
+        $this->assertEquals('Estação Central', $reservaAtualizada->ponto_encontro);
+        $this->assertEquals('987654321', $reservaAtualizada->contacto);
+        $this->assertEquals(1, $reservaAtualizada->reembolso);
+    }
+
+    public function testEliminarReserva()
+    {
+        // 1️⃣ Criar reserva
+        $reserva = new Reserva();
+        $reserva->perfil_id = $this->perfil->id;
+        $reserva->boleia_id = $this->boleia->id;
+        $reserva->ponto_encontro = 'Praça Teste';
+        $reserva->contacto = '912345678';
+        $reserva->reembolso = 0;
+
+        $this->assertTrue($reserva->save(), json_encode($reserva->errors));
+
+        $id = $reserva->id;
+
+        $this->assertEquals(1, $reserva->delete());
+
+
+        $this->assertNull(Reserva::findOne($id));
+    }
+
+
 }

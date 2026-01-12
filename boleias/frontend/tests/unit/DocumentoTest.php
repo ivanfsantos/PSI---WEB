@@ -44,4 +44,22 @@ class DocumentoTest extends \Codeception\Test\Unit
 
         $this->assertTrue($documento->save(), json_encode($documento->errors));
     }
+
+    public function testEliminarDocumento()
+    {
+        $documento = new Documento();
+        $documento->perfil_id = $this->perfil->id;
+        $documento->carta_conducao = 'carta.pdf';
+        $documento->cartao_cidadao = 'cc.pdf';
+        $documento->valido = 1;
+
+        $this->assertTrue($documento->save(), json_encode($documento->errors));
+
+        $id = $documento->id;
+
+        $this->assertEquals(1, $documento->delete());
+
+
+        $this->assertNull(Documento::findOne($id));
+    }
 }

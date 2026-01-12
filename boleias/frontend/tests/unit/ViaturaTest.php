@@ -44,4 +44,48 @@ class ViaturaTest extends \Codeception\Test\Unit
         $this->assertTrue($viatura->save(), json_encode($viatura->errors));
 
     }
+
+    public function testAtualizarBoleia()
+    {
+        $viatura = new Viatura();
+        $viatura->perfil_id = $this->perfil->id;
+        $viatura->marca = 'Toyota';
+        $viatura->modelo = 'Corolla';
+        $viatura->matricula = 'AB-12-CD';
+        $viatura->cor = 'Prata';
+
+        $this->assertTrue($viatura->save(), json_encode($viatura->errors));
+
+
+        $viatura->marca = 'Porche';
+        $viatura->modelo = 'Carrera';
+        $viatura->cor = 'Preto';
+
+        $this->assertTrue($viatura->save(), json_encode($viatura->errors));
+
+        $viaturaAtualizada = Viatura::findOne($viatura->id);
+
+        $this->assertEquals('Porche', $viaturaAtualizada->marca);
+        $this->assertEquals('Carrera', $viaturaAtualizada->modelo);
+        $this->assertEquals('Preto', $viaturaAtualizada->cor);
+    }
+
+    public function testEliminarViatura()
+    {
+        $viatura = new Viatura();
+        $viatura->perfil_id = $this->perfil->id;
+        $viatura->marca = 'Toyota';
+        $viatura->modelo = 'Corolla';
+        $viatura->matricula = 'AB-12-CD';
+        $viatura->cor = 'Prata';
+
+        $this->assertTrue($viatura->save(), json_encode($viatura->errors));
+
+        $id = $viatura->id;
+
+        $this->assertEquals(1, $viatura->delete());
+
+
+        $this->assertNull(Viatura::findOne($id));
+    }
 }

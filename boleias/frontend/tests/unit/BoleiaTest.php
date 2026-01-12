@@ -73,4 +73,52 @@ class BoleiaTest extends Unit
 
         $this->assertEquals($this->viatura->id, $boleia->viatura->id);
     }
+
+    public function testAtualizarBoleia()
+    {
+        $boleia = new Boleia();
+        $boleia->viatura_id = $this->viatura->id;
+        $boleia->origem = 'Porto';
+        $boleia->destino = 'Lisboa';
+        $boleia->data_hora = date('Y-m-d H:i:s', strtotime('+1 day'));
+        $boleia->lugares_disponiveis = 3;
+        $boleia->preco = 25.50;
+
+        $this->assertTrue($boleia->save(), json_encode($boleia->errors));
+
+
+        $boleia->destino = 'Coimbra';
+        $boleia->lugares_disponiveis = 2;
+        $boleia->preco = 20.00;
+
+        $this->assertTrue($boleia->save(), json_encode($boleia->errors));
+
+        $boleiaAtualizada = Boleia::findOne($boleia->id);
+
+        $this->assertEquals('Coimbra', $boleiaAtualizada->destino);
+        $this->assertEquals(2, $boleiaAtualizada->lugares_disponiveis);
+        $this->assertEquals(20.00, $boleiaAtualizada->preco);
+    }
+
+    public function testEliminarBoleia()
+    {
+        $boleia = new Boleia();
+        $boleia->viatura_id = $this->viatura->id;
+        $boleia->origem = 'Porto';
+        $boleia->destino = 'Lisboa';
+        $boleia->data_hora = date('Y-m-d H:i:s', strtotime('+1 day'));
+        $boleia->lugares_disponiveis = 3;
+        $boleia->preco = 25.50;
+
+        $this->assertTrue($boleia->save(), json_encode($boleia->errors));
+
+        $id = $boleia->id;
+
+        $this->assertEquals(1, $boleia->delete());
+
+
+        $this->assertNull(Boleia::findOne($id));
+    }
+
+
 }
