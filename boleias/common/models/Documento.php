@@ -26,6 +26,7 @@ class Documento extends \yii\db\ActiveRecord
             [['valido', 'perfil_id'], 'integer'],
             [['carta_conducao', 'cartao_cidadao'], 'string', 'max' => 255],
             [['perfil_id'], 'exist', 'skipOnError' => true, 'targetClass' => Perfil::class, 'targetAttribute' => ['perfil_id' => 'id']],
+            ['carta_conducao', 'validateCondutor'],
         ];
     }
 
@@ -41,6 +42,13 @@ class Documento extends \yii\db\ActiveRecord
         ];
     }
 
+    public function validateCondutor($attribute, $params)
+    {
+        $perfil = Perfil::findOne($this->perfil_id);
+        if ($this->$attribute && (!$perfil || !$perfil->condutor)) {
+            $this->addError($attribute, 'Apenas condutores podem enviar carta de condução.');
+        }
+    }
 
     public function getPerfil()
     {

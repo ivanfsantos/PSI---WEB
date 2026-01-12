@@ -22,6 +22,7 @@ class Boleia extends \yii\db\ActiveRecord
             [['origem', 'destino'], 'string', 'max' => 255],
             [['preco'], 'number'],
             [['viatura_id'], 'exist', 'skipOnError' => true, 'targetClass' => Viatura::class, 'targetAttribute' => ['viatura_id' => 'id']],
+            ['viatura_id', 'validateCondutor'],
         ];
     }
 
@@ -35,6 +36,15 @@ class Boleia extends \yii\db\ActiveRecord
             'lugares_disponiveis' => 'Lugares Disponiveis',
             'viatura_id' => 'Viatura ID',
         ];
+    }
+
+
+    public function validateCondutor($attribute, $params)
+    {
+        $viatura = Viatura::findOne($this->$attribute);
+        if (!$viatura || !$viatura->perfil || !$viatura->perfil->condutor) {
+            $this->addError($attribute, 'A boleia só pode ser criada por um condutor.');
+        }
     }
 
     public function getAvaliacoes()

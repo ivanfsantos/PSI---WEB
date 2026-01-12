@@ -62,4 +62,36 @@ class DocumentoTest extends \Codeception\Test\Unit
 
         $this->assertNull(Documento::findOne($id));
     }
+
+    public function testNaoCondutorNaoPodeEnviarDocumentoDeCondutor()
+    {
+        $user = new User();
+        $user->username = 'nao_condutor_doc';
+        $user->email = 'nao_condutor_doc@teste.com';
+        $user->setPassword('123456');
+        $user->generateAuthKey();
+        $user->status = User::STATUS_ACTIVE;
+        $user->save(false);
+
+        $perfilNaoCondutor = new Perfil();
+        $perfilNaoCondutor->user_id = $user->id;
+        $perfilNaoCondutor->nome = 'Não Condutor';
+        $perfilNaoCondutor->telefone = 912345680;
+        $perfilNaoCondutor->morada = 'Rua Teste 3';
+        $perfilNaoCondutor->genero = 'M';
+        $perfilNaoCondutor->data_nascimento = '1995-01-01';
+        $perfilNaoCondutor->condutor = 0;
+        $perfilNaoCondutor->save(false);
+
+        $doc = new Documento();
+        $doc->perfil_id = $perfilNaoCondutor->id;
+        $doc->valido = 1;
+        $doc->carta_conducao = 'carta.pdf'; 
+        $doc->cartao_cidadao = 'cc.pdf';
+
+
+        $this->assertFalse($doc->save());
+        $this->assertArrayHasKey('carta_conducao', $doc->errors);
+    }
+
 }

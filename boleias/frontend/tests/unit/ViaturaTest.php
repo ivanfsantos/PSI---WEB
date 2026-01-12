@@ -45,7 +45,7 @@ class ViaturaTest extends \Codeception\Test\Unit
 
     }
 
-    public function testAtualizarBoleia()
+    public function testAtualizarViatura()
     {
         $viatura = new Viatura();
         $viatura->perfil_id = $this->perfil->id;
@@ -88,4 +88,7 @@ class ViaturaTest extends \Codeception\Test\Unit
 
         $this->assertNull(Viatura::findOne($id));
     }
+
+
+
 }

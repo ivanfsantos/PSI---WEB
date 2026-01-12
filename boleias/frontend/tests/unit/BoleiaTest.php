@@ -120,5 +120,51 @@ class BoleiaTest extends Unit
         $this->assertNull(Boleia::findOne($id));
     }
 
+    public function testNaoCondutorPodeCriarBoleia()
+    {
+        // Perfil que nao é condutor condutor
+        $user2 = new User();
+        $user2->username = 'nao_condutor';
+        $user2->email = 'nao_condutor@teste.com';
+        $user2->setPassword('123456');
+        $user2->generateAuthKey();
+        $user2->status = User::STATUS_ACTIVE;
+        $user2->save(false);
+
+        $perfilNaoCondutor = new Perfil();
+        $perfilNaoCondutor->user_id = $user2->id;
+        $perfilNaoCondutor->nome = 'Não Condutor';
+        $perfilNaoCondutor->telefone = 912345679;
+        $perfilNaoCondutor->morada = 'Rua Teste 2';
+        $perfilNaoCondutor->genero = 'F';
+        $perfilNaoCondutor->data_nascimento = '1995-01-01';
+        $perfilNaoCondutor->condutor = 0;
+        $perfilNaoCondutor->save(false);
+
+        // Cria uma viatura do perfil nao condutor
+        $viaturaNaoCondutor = new Viatura();
+        $viaturaNaoCondutor->perfil_id = $perfilNaoCondutor->id;
+        $viaturaNaoCondutor->marca = 'Ford';
+        $viaturaNaoCondutor->modelo = 'Fiesta';
+        $viaturaNaoCondutor->matricula = 'CC-11-DD';
+        $viaturaNaoCondutor->cor = 'Vermelho';
+        $viaturaNaoCondutor->save(false);
+
+        // Tenta criar uma boleia com viatura de não condutor
+        $boleia = new Boleia();
+        $boleia->viatura_id = $viaturaNaoCondutor->id;
+        $boleia->origem = 'Lisboa';
+        $boleia->destino = 'Porto';
+        $boleia->data_hora = date('Y-m-d H:i:s', strtotime('+1 day'));
+        $boleia->lugares_disponiveis = 3;
+        $boleia->preco = 15.00;
+
+        $this->assertFalse($boleia->save());
+        $this->assertArrayHasKey('viatura_id', $boleia->errors);
+    }
+
+
+
+
 
 }

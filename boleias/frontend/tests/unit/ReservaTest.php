@@ -131,5 +131,35 @@ class ReservaTest extends Unit
         $this->assertNull(Reserva::findOne($id));
     }
 
+    public function testNaoUltrapassaLugaresDisponiveis()
+    {
+        for ($i = 0; $i < 3; $i++) {
+            $reserva = new Reserva();
+            $reserva->perfil_id = $this->perfil->id;
+            $reserva->boleia_id = $this->boleia->id;
+            $reserva->ponto_encontro = 'Ponto ' . $i;
+            $reserva->contacto = '912345678';
+            $reserva->reembolso = 0;
+
+            $this->assertTrue(
+                $reserva->save(),
+                'Falhou na reserva ' . ($i + 1)
+            );
+        }
+
+        $reservaExtra = new Reserva();
+        $reservaExtra->perfil_id = $this->perfil->id;
+        $reservaExtra->boleia_id = $this->boleia->id;
+        $reservaExtra->ponto_encontro = 'Reserva Extra';
+        $reservaExtra->contacto = '912345678';
+        $reservaExtra->reembolso = 0;
+
+        $this->assertFalse($reservaExtra->save());
+
+
+        $this->assertArrayHasKey('boleia_id', $reservaExtra->errors);
+    }
+
+
 
 }

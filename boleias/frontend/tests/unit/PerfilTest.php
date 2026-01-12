@@ -86,4 +86,5 @@ class PerfilTest extends \Codeception\Test\Unit
 
         $this->assertNull(Perfil::findOne($id));
     }
+
 }
